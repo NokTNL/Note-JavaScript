@@ -1,0 +1,68 @@
+<script>
+  // The Promise object is used to handle unresolved value (wait for the value asynchronusly),
+  // and let you run some code after the value is resolved
+  const promise = new Promise(
+    // The function below (passed into the paramters) is called the EXECUTOR (the "production code")
+    // It will be run upon Promise construction
+    // !! You will usually put code that takes time to finish here
+    // Two built-in functions in Promise (resolve & reject) are passed into the executor
+    (resolve, reject) => {
+      // The inital state of a Promise is "pending"
+      // When you call "resolve", the STATE of the promise will to "fulfilled"
+      //
+      resolve("some value");
+      // When you call "reject", the STATE will be set to "rejected"
+      // and its RESULT will be set to the argument passed in reject (recommend to pass in a built-in Error object)
+      reject(new Error("Hahahaha"));
+      // !! Whenever an error is thrown inside the executor, the promise is REJECTED with result = the Error object
+      // !! Any state change in a Promise is final, EXCEPT whne you return a new Promise in chained Promise methods
+      // !! You can't access the STATE and RESULT of the promise directly. You have to ...
+      // ... reply on Promise methods like .then, .catch and .finally
+    }
+  );
+
+  // So after resolving / rejecting, you have to do something based on the settled promise
+  promise.then(
+    // .then receives a callback function as the argument to handle FULFILLED promise
+    // then it passes the RESULT to the callback as its argument
+    (result) => {
+      console.log(result);
+    }
+    // .then can receive an OPTIONAL second function that handles REJECTED promise
+    // if it is not specified, it will be set to an identity function that returns the original rejected promise
+    // (i.e. keep the rejected promise untouched)
+  );
+  // !! .then does NOT run until the promise is settled
+
+  /* Promise chainig */
+  // .then (also .catch and .finally ) actually RETURNS a new promise.
+  // The returned promise's state and result depends on what the HANDLER FUNCTION inside returns:
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then#return_value
+  // returns a value (or nothing)   =>  RESOLVED, result = value (or undefined)
+  // throws error                   =>  REJECTED, result = the thrown error
+  // returns a SETTLED promise      =>  copy the returned promise
+  // returns a PENDING promise      =>  the next .then will be handelled asynchronously, until that promise is resolved, then copy the returned promise
+  //
+  // e.g. you return a value in .then, then the state will be untouched
+
+  /* Error handling: .catch */
+  // .catch calls a function when the promise is REJECTED
+  promise
+    .then((result) => result)
+    .then((result) => result)
+    .catch((error) => {
+      console.log(error);
+    });
+  // If you want to catch ALL errors in the promise chain, put .catch at the end of the chain.
+  // All .then's will only handle FULFILLED promise and will pass the original REJECTED promise down untouched
+  // !! If you put .catch in the MIDDLE, beware of what you returns
+  // If you return a value / nothing, it will turn the Promise back to RESOLVED
+  // If you want to keep it rejected, either throw a new error, or return an immediately rejcted new promise
+
+  // .finally: run when the promise is settled, regardless if it is fulfilled/rejected.
+  // !! the callback inside .finally does NOT receive the result, and has no way to access it. ...
+  // ... instead, you should chain it to .then
+  promise.finally();
+
+  // !! setTimout, navigator.geolocation etc. does NOT return promises
+</script>

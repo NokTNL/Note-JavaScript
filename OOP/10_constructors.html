@@ -1,0 +1,14 @@
+<script type="text/javascript">
+  // Constructor functions by convention are named in UpperCamelCase
+  function SpaceShuttle(targetPlanet) {
+    // this = {};   (when using new)
+    this.targetPlanet = targetPlanet;
+    // return this;  (when using new)
+  }
+  const zeus = new SpaceShuttle("Mars"); // 'new' creates a new object from the constructor and returns the whole new object
+  // 'this' in the constructor binds to the new object
+  console.log(zeus.targetPlanet); // 'Mars'
+  //
+  // !! You can't do constructor and 'new' with arrow functions because it doesn't bind 'this'
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+</script>

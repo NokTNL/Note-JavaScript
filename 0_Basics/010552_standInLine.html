@@ -1,0 +1,13 @@
+<script type="text/javascript">
+  function nextInLine(arr, item){ // function that pushes an item and
+                                  // shifts out the bottom item from the array
+    arr.push(item);
+    arr.shift();
+    return arr;
+  }
+
+  var myArray = [1,2,3,4,5];
+  myArray = nextInLine(myArray, 6);
+  console.log(myArray);
+  
+</script>

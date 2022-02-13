@@ -1,0 +1,75 @@
+<script type="text/javascript">
+  // https://stackoverflow.com/questions/33898512/spread-syntax-vs-rest-parameter-in-es2015-es6
+
+  // Rest operator
+  // When declaring arrays or arugments, gathers all the values passed to it into one array
+  // e.g. array
+  let [...m] = [1, 2, 3, 4, 5]; // gathers all the values from the array literal passed to it,
+  // and pack all of them in the array 'm'
+  // !! Note that [...m] is a destrcution assignment,
+  // an ES6 syntax that automatically destruct the array literal on the right
+  // to individual values
+  console.log(m); // [1,2,3,4,5]
+
+  // e.g. arguments
+  const sum = (
+    ...args // takes any number of arguments and
+  ) =>
+    // pass in the arguments as an array called 'args'
+    args.reduce((a, b) => a + b, 0); // a statement that returns the sum
+  console.log(sum(1, 2, 3)); // 6
+
+  // Spread operator
+  // Objects (incl. arrays and functions) are passed by reference other than values
+  // https://codeburst.io/explaining-value-vs-reference-in-javascript-647a975e12a0
+
+  let arr1 = [1, 2, 3];
+  let arr2;
+  arr2 = arr1; // This copies the address of arr1 other than the values inside
+  arr1[0] = "blahblah";
+  console.log(arr2); // arr2 will also be changed
+
+  // The spread operator ... 'spreads' the array out into its individual values instead
+  let arr3 = [4, 5, 6];
+  let arr4;
+  arr4 = [...arr3]; // spreads out arr3 into its values, and packed into an array
+  arr3[0] = "blahblahblah";
+  console.log(arr4); // arr4 is not changed
+
+  // Spread operator works for any iterables, incl. strings
+  console.log([..."BLAH"]); // returns ['B', 'L', 'A', 'H']
+
+  // Also works to spread an array into a list of arguments using (...)
+  // e.g. using the sum() function defined above:
+  const arr5 = [5, 10];
+  console.log(sum(5, ...arr5)); // 20
+
+  // The difference between the rest/spread operator is that the rest operator works
+  // on the container ('left') hand side, while the spread operator works at the value
+  // ('right') hand side
+
+  // !!! Note that for either spread/rest operator, it must be wrapped in a (...)
+  // or [...] to work. Think like the string of values must have a container to be
+  // meaningful, either an array or a list of arguments. So the below code doesn't work:
+  //  const arr6 = ...arr5; // ERROR
+
+  // They can be used together in one line:
+  const [...arr7] = [...arr5];
+  console.log("arr7: " + arr7); // arr7: 5,10
+
+  // Spread operator in OBJECTS & spread operator only makes shallow copy
+  const myMovie = {
+    info: {
+      title: "Star Wars",
+      director: "George Lucas",
+    },
+    id: 1,
+  };
+  let myNewMovie = { ...myMovie }; // Spreaded all prop-value pairs, passed by value
+  myNewMovie.id = 2; // This will not affect myMovie, BUT!!!
+  myNewMovie.info.title = "Changed"; // This WILL affect the original object
+  // Because '...' only does a shallow copy. Only the top layer is passed by reference. Nested object as a value is still passed by referece. However this will work:
+  myNewMovie.info = "Nothing"; // This will not change the orginal myMovie
+  // A way to manually do deep copy is to use nested '...' and take advantage of that later prop-value pairs override older ones:
+  myNewMovie = { ...myMovie, info: { ...myMovie.info } };
+</script>

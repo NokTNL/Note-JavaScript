@@ -1,0 +1,141 @@
+<script>
+  // Class syntax: syntactic sugar in place of constructor functions
+  //
+  class Product {
+    // Use UpperCamelCase for classes
+    title = "Default"; // Use assignment instead of semicolon
+    // These are called "fields". --> properties once the object is created
+    // If these can be assigned in the constructor, no need to be declared here.
+    imageUrl;
+
+    // Called when a new object is constrcuted; it is optional; will override the above
+    constructor(title, imageUrl) {
+      this.title = title; // 'this' in a constructor will be bound to the newly created object
+      this.imageUrl = imageUrl;
+      this.duplicatedmethod = function () {};
+    }
+
+    // a class method
+    // !! This will be declared in the PROTOTYPE of the new instances.
+    // This is different from declaring a function in the constructor (using this.duplicatedmethod = function() ),
+    // which is not advised to do so because you will make identical copies of it.
+    someMethod() {
+      console.log("this is someMethod in the class Product");
+    }
+  }
+
+  // Create and assign new objects using classes and 'new'
+  const product = new Product( // 'execute' a class like a function, plus keyword 'new'. returns a new object
+    "A Pillow",
+    "https://www.maxpixel.net/static/photo/2x/Soft-Pillow-Green-Decoration-Deco-Snuggle-1241878.jpg"
+  );
+
+  // Class expression (similar to function expression): alternative way to declare class
+  const AnotherClass = class {
+    whatever = "";
+  };
+
+  // Class inheritance using 'extends'
+  class LimitedProduct extends Product {
+    constructor(title, imageUrl, quantity) {
+      // If an extended class do not have constructor defined, by defualt:
+      // constructor(...args) {
+      //  super(...args);
+      // } --> A constructor will always be availble
+      // If we do define our own constructor, we must also call Product's constructor using 'super()':
+      super(title, imageUrl); // Pass title & imageUrl to super(). These are needed for the parent's constructor.
+      this.quantity = quantity;
+    }
+    // Reason why calling super() is a must in derived class' constructor: derived classes can't handle this binding, and must delegate that to its parent's constructor
+
+    // overriding parent's method: just declare it again
+    someMethod() {
+      super.someMethod(); // in case you want to call parent's method, you can use 'super.method' syntax
+      console.log("but is overidden in the class LimitedProduct");
+    }
+    // !! Arrow functions don't have 'super'. When 'this' is called, it takes from the function SURROUNDING it.
+  }
+  const limitedProduct = new LimitedProduct("Limited Product", "", 2);
+  limitedProduct.someMethod();
+  // !! parent class' FIELDS cannot be easily overriden in derived class. Use constructors, methods, getter/setter instead
+
+  //
+  // Mix-ins
+  // Sometimes we want a class to borrow methods/properties from more than one class.
+  // But in JS, a class cannot have more than one parent class.
+  // Mixin = make a class acquire extra methods/properties without inheriting
+  // Takes an OBJECT form:
+  const myMixin = {
+    sayHi() {
+      alert(`Hello ${this.name}`);
+    },
+    sayBye() {
+      alert(`Bye ${this.name}`);
+    },
+  };
+  class MixedInClass {
+    whatever = "";
+  }
+  Object.assign(MixedInClass.prototype, myMixin); // = adding new prop/methods to the class
+  // Object.assign():                   ^ copies all prop-value in this object
+  //                  ^ then add to this object (overwrites the value if the prop already exists)
+  //
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+
+  // Alterantively, do chained inheritance: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#mix-ins
+
+  // Protected properties/methods
+  // !!! These are fake. You can still access the properties/methods with the '_underscore' names.
+  class CoffeeMachine {
+    _waterAmount = 0;
+    constructor(power) {
+      this._power = power;
+    }
+    set waterAmount(value) {
+      if (value < 0) {
+        value = 0;
+      }
+      this._waterAmount = value;
+    }
+    get waterAmount() {
+      return this._waterAmount;
+    }
+    get power() {
+      return this._power;
+    }
+  } // Or use function names like setWaterAmount() as setters/getters
+  // True protected properties can only be defined as a VARIABLE in the constructors (bc. it's function scoped),
+  // and define getter/setter inside it: https://stackoverflow.com/questions/22156326/private-properties-in-javascript-es6-classes?page=1&tab=votes#tab-top
+  class Person {
+    constructor(name) {
+      let _name = name; // This variable is not accessible by name outside the constructor
+      this.setName = function (name) {
+        _name = name;
+      }; // Only accessible through this relationship in the memory
+      this.getName = function () {
+        return _name;
+      };
+    }
+  }
+
+  // Static methods
+  // properties and methods declared with 'static' will only be accessible in the class, but not the instances
+  class Static {
+    static staticField = "staticField property";
+    static staticMethod() {
+      console.log(
+        `You can only call Static.method and ${this.staticField} in the class`
+      );
+    }
+  }
+  Static.staticMethod();
+  const myStatic = new Static();
+  // myStatic.staticMethod(); // TypeError: static.staticMethod is not a function
+  // Static methods are inherited from the parent class too,
+  // EXCEPT BETWEEN built-in classes. e.g. Array inherits Object but does not have the Array.keys() static method
+  // !! class is a function (therefore is an object) so it can own properties and methods.
+  // Static methods are owned by the class object, not the prototype
+
+  // instanceof : check if an object is an instance of a class
+  console.log(myStatic instanceof Static); /// true
+</script>

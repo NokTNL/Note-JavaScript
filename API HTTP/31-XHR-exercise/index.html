@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const requestUrl =
+        "https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats";
+      //   const requestUrl =
+      //     "https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats";
+
+      // Create a new XHR
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", requestUrl);
+      xhr.responseType = "json";
+      xhr.send();
+
+      // Set behaviour on receiving response
+      const appendImg = (url, alt) => {
+        document.body.innerHTML = `
+            <img alt="${alt}" src=${url} />
+        `;
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            console.log("XHR request successful");
+            const imageUrl = xhr.response.data.images.original.url;
+            appendImg(imageUrl, "cats");
+          } catch {
+            console.error("Error: no URL seemed to have been returned");
+            appendImg("error.gif", "error");
+          }
+        } else {
+          console.error(`HTTP error: ${xhr.status}`);
+          appendImg("error.gif", "error");
+        }
+      };
+
+      xhr.onerror = () => {
+        console.error(`XHR request failed`);
+        appendImg("error.gif", "error");
+      };
+    </script>
+  </body>
+</html>

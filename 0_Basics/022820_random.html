@@ -1,0 +1,19 @@
+<script type="text/javascript">
+  // Random float between 0-1 (not incl. 1)
+  console.log(Math.random() + "\n");
+
+  // Random integer between 0 and a specific number
+  function randomInteger (max) {
+    return Math.floor(Math.random() * (max+1)); // e.g. max = 10,
+    // then Math.random() * 11 can never reach 11,
+    // Math.floor() makes it fall back to 10
+  }
+  console.log(randomInteger(10) + "\n");
+
+  // Random integer between a min and a max
+  function randomIntegerRange (min, max) {
+    return Math.floor(Math.random() * (max-min+1)) + min; 
+  }
+  console.log(randomIntegerRange(1,5) + "\n");
+
+</script>

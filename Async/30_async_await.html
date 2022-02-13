@@ -1,0 +1,48 @@
+<script>
+  // Set-up
+  function getPosition() {
+    /* Some async code that uses navigator.geolocation.getCurrentPosition */
+  }
+  function setTimer() {
+    /* Some code that uses setTimeout */
+  }
+
+  /**** async & await: provides a shortcut to using Promises in JS ****/
+
+  // async: gurantees that a FUNCTION (and only functions) return a new Promise
+  async function test() {
+    // console.log(noSuchVar); // If throws error, returns a rejected promise & result = the Error
+    return "Done"; // Otherwise, returns a new, resolved Promise, result = what is returned here
+  }
+  test().then(console.log); // "Done"
+
+  // arrow functions are accepted:
+  const myAsyncFunc = async () => {};
+  // IIFE:
+  (async () => {
+    let response = await fetch("/article/promise-chaining/user.json");
+    let user = await response.json();
+  })();
+
+  /* await */
+  async function trackUserHandler() {
+    let posData;
+    let timerData;
+    try {
+      // await can be put before any functions that RETURNS A PROMISE (e.g. fetch)
+      // anything not Promise-returning put after await will be turned into a resolved Promise
+      // !! can only use await in async functions (or in JS modules)
+      posData = await getPosition(); // <-- the remaining code in this function will not be run until this function is resolved
+      // after the Promise is resolved, the "await ..." expression evaluates to the result of the Promise (and assigned to posData here)
+      // the remining code (wrapped by await in an invisible .then) will run only the await code is settled
+      timerData = await setTimer(1000);
+    } catch (error) {
+      // await will throw (NOT return) the rejected RESULT (usually an Error object) if the promise is REJECTED
+      // no .catch so use the try...catch to catch the error
+      console.log(error);
+    }
+    // !! Shortcoming of async/await: no way to make the below line SYNCHRONOUS
+    // because the whole thing is wrapped in .then with no alternatives
+    console.log(timerData, posData);
+  }
+</script>

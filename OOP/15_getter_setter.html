@@ -1,0 +1,24 @@
+<script type="text/javascript">
+  class Book {
+    constructor(author) {
+      this._author = author; // Assume we can make this property private
+      // private variables are conventionally named with leading '_'
+    }
+    get writer() {
+      return this._author;
+    }
+    set writer(updatedAuthor) {
+      // You can set the getter and setter using the same name
+      this._author = updatedAuthor;
+    }
+  }
+
+  const novel = new Book("anonymous"); // creates new object
+  myAuthor = novel.writer; // looks like calling a property value, actually calling the getter function
+  console.log(myAuthor); // 'anonymous'
+
+  novel.writer = "newAuthor"; // looks like assigning to a property, actually passing an argument to the setter function
+  console.log(novel.writer);
+
+  // Note that in both the getter and setter we are not calling novel._author directly (although you can still call it)
+</script>

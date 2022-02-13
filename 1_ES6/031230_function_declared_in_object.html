@@ -1,0 +1,24 @@
+<script type="text/javascript">
+
+  // You can make property names into functions in an object:
+  let bicycle = {
+    gear: 2,
+    setGear: function(newGear) {
+      this.gear = newGear; // changes bicycle.gear
+    }
+  };
+
+  bicycle.setGear(3); // call the function by dot notation
+  console.log(`Bicycle gear set to ${bicycle.gear}`);
+
+  // In ES6 you can shorthand it into:
+  bicycle = {
+    gear: 2,
+    setGear(newGear) {  // Property name with ()
+      this.gear = newGear;
+    }
+  }
+  bicycle.setGear(5);
+  console.log(`Bicycle gear set to ${bicycle.gear}`);
+
+</script>

@@ -1,0 +1,12 @@
+<script type="text/javascript">
+  const [,even1,,even2,,] = [1, 2, 3, 4, 5, 6]; // use commas to select values
+    // the last commas are optional as it will stop evaluating when it hits the end of the list
+
+  console.log(even1, even2); // 2 4
+
+  // Use destructuring to swap values between variables
+  let a = 4, b = 5;
+  [a, b] = [b, a]; // if defined before, also no need let/const keyword
+  console.log(a, b); // 5 4
+
+</script>

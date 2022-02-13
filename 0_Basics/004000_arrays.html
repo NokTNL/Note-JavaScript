@@ -1,0 +1,86 @@
+<!-- prettier-ignore -->
+<script type="text/javascript">
+  var myArray = ["Blah", 35]; // an array
+  var nestedArray = [
+    ["Blahblah", 1],
+    [null, "A"],
+  ]; // Nested array
+  console.log(nestedArray[0]); // will return the element array
+  console.log(nestedArray[0][1]);
+
+  // Alternative: make new array with identicial dummy values
+  Array(5).fill("a"); // fills an array of length 5 with the value "a"
+
+  /* Array properties */
+  //length
+  console.log(myArray.length); // 4
+
+  //Check if a variable is an array
+  const fruits = ["Banana", "Orange", "Apple"];
+  console.log(`'typeof' says 'fruits' is ${typeof fruits}`); // 'object', doesn't work
+  //In ES5:
+  console.log(`'Array.isArray()' says 'fruits' is ${Array.isArray(fruits)}`); // true
+
+  /* Array query methods */
+
+  // Array.entries(): returns an nested array, each item = [index, value] in  the original array
+  // Array.keys(): returns an array of index
+
+  // Array.prototype.findIndex()
+  // returns the index of the FIRST array element that passes the provided test function
+  const array1 = [5, 12, 8, 130, 44];
+  const isLargeNumber = (element) => element > 13;
+  console.log(array1.findIndex(isLargeNumber)); // expected output: 3
+  // Also Array.prototype.find(), but returns the value of the element instead of the index
+
+  /* Array manipulation methods */
+  //Add or remove elements
+  myArray.push(3, [4, "A"]); // You can push() multiple elements into an array
+  console.log(myArray);
+  myArray.pop(); // pop() only removes one element at one time
+  console.log(myArray);
+  myArray.shift(); // left shift, liking popping from the bottom
+  console.log(myArray);
+  myArray.unshift("A", "B"); // unshift adds elements to the bottom
+  console.log(myArray); // ["A", "B", 35, 3]
+
+  // join()
+  console.log(["Banana", "Orange", "Apple", "Mango"].join(", ")); // 'Banana, Orange, Apple, Mango'
+
+  // slice() !! does not change the array, returns new one
+  // returns a 'slice' of the array starting from that index
+  console.log(fruits.slice(1)); //"Orange", "Apple"
+
+  // splice()
+  // const fruits = ["Banana", "Orange", "Apple"];
+  const deletedItems = fruits.splice(1,        2,      "Lemon", "Kiwi");
+  // returns deleted               add    no. elements  elements to
+  //      items                   before    to remove      be added
+  //                              index   after index    (optional)
+  //                          ("Orange")   ('Orange',
+  //                                       'Apple')
+  console.log("Deleted by splice(): " + deletedItems); // 'Orange', 'Apple'
+  console.log(fruits); // 'Banana', 'Lemon', 'Kiwi'
+
+  // concat()   !! does not change the array but returns the concat.ed one
+  const arr1 = ["Cecilie", "Lone"];
+  const arr2 = ["Emil", "Tobias", "Linus"];
+  const arr3 = ["Robin", "Morgan"];
+
+  const myNewArr = arr1.concat(arr2, arr3);
+  console.log("concat(): " + myNewArr);
+
+  // sort(): sort array alphabetically
+  console.log(["B", "O", "A", "M"].sort()); // ['A','B','M','O']
+  // But! also sort number arrays alphabetically
+  console.log([5, 7, 12, 21].sort()); // [12,21,5,7] --> wrong
+  // Solution: provide a compare function
+  // For example if compareFunc(a,b) = a - b:
+  // - if a - b < 0, a before b ;
+  // - if a - b > 0, b before a; 'Postive then Swap'
+  // - if a - b, no changes to order
+  const myNumArray = [5, 7, 12, 21];
+  myNumArray.sort((a, b) => a - b);
+  console.log(myNumArray); // [5, 7, 12, 21]
+  // Use (a, b) => (b - a) to do descending numeric sort
+</script>

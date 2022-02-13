@@ -1,0 +1,26 @@
+<script>
+  // Asynchronous codes are those that you choose to run later
+  // They are NON-BLOCKING, meaning that once it is handled by the browser, it won't block the code and the next line will run
+  // Example:
+  setTimeout(callback, timeout); // Not run until time reaches timeout. NOTE: even when timeout = 0, it won't run until stack is empty
+  document.addEventListener(); // No run until someone clicks the target
+  navigator.geolocation.getCurrentPosition(callBackFunc); // callBackFunc not run until the location is fetched
+  // Asynchornous codes are "remembered" by the browser and is run when an event triggers it (eg. when a timer is up/a button is clicked)
+  // When an event is triggered, they will be pushed into the "meassge queque"
+  // The EVENT LOOP built in the browser will constantly check if the stack is empty
+  // When the stack is empty, the oldest code waiting the message queque will be pushed into the stack to run
+
+  // That's why when a blocking code is running, async code won't tun until it finishes.
+  // (Because JS is single-threaded)
+  // Something like this:
+  setTimeout(() => {
+    console.log("Time's up!");
+  }, 10); // won't show until the for loop is finished
+
+  let result = 0;
+  for (let i = 0; i < 100000000; i++) {
+    result += i;
+  } // this takes a while to run, and is BLOCKING
+  console.log(result); // --> this also won't show until the for-loop has finished
+  //
+</script>

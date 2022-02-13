@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- prettier-ignore -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <img src="#" />
+  </body>
+
+  <script>
+    // fetch is a wrapper of XHR
+      // fetch("https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=123123")
+    fetch("https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats")
+      //                Parameters starts with '?'^
+      //                                                                 Separated with '&'^
+      // You can also just type this URL into the browser to get a long string of text
+      .then(function (response) {
+      // fetch does not return rejected promise on HTTP error status. It will still be a fulfilled promise.
+      // If the reponse is NOT in the range 200-299, then response.ok will = false and we can throw an error ourselves:
+        if (!response.ok) {
+            throw new Error("Network response was not OK", {cause: response.status})
+        }
+          console.log("Netowrk response:");
+          // fetch's result is a built-in Response object
+          console.log(response);
+          // the Response does not contain the JSON we need. Call response.json to request it:
+          return response.json(); // returns a PROMISE that has a result = an object parsed from the received JSON
+          // ... so need another .then to extract it
+
+      })
+      .then((result) => {
+        const url = result.data.images.original.url;
+        console.log(url);
+        const img = document.querySelector("img");
+        img.src = url;
+      })
+      .catch(function (err) {
+        console.error("I catch an error in 'fetch'\n", err.message, err.cause || "");
+      });
+  </script>
+</html>

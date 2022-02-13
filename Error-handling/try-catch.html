@@ -1,0 +1,56 @@
+<script>
+  // Instead of instantly killing a code in a runtime error (exceptions),
+  // try...catch let you to do something with the error
+  try {
+    noSuchVariable; // <-- undeclared
+  } catch (err) {
+    // "catch" receives an (optional) Error object if any error happens in the "try" code
+    // the (err) is called 'catch binding'
+    console.log(err.name); // error name
+    console.log(err.message); // error details
+    console.log(err.stack); // name, message and the stack at that moment, as a string
+    console.log(err); // same as above
+  }
+
+  /* Creating your own built-in error */
+  let error = new Error("Uh Oh");
+  let syntaxError = new SyntaxError("What?");
+  // The constructor of built-in Error objects makes error.name = the name of the constructor
+  // and error.message = the passed-in argument
+
+  /* throwing errors by ourselves */
+  // The JS engine only throws error when it matters to compiling it
+  // We can throw error whenever we think it matters, using "throw"
+  // COde execution will be stopped (if not handled by try .. catch)
+  // And what we throw as an error does not matter
+  throw "Hahah"; // Uncaught Hahah; The string 'Hahah' is thrown as an error
+  // Preferred: throw built-in error objects as they will have name & message
+  throw new Error("Hey!");
+
+  // If throwing your error by yourself in try...catch, catch only the error you throw yourself
+  // and "rethrow" errors that you don't expect (and make the program halt)
+
+  /* finally: code that runs regardless of error was thrown or not (instead of catching the code then stop) */
+  // When you have the 'finally' block, 'catch' is optional (not handling the error)
+
+  /** try...catch is synchronous **/
+  // Note that this won't work:
+  try {
+    setTimeout(function () {
+      noSuchVariable; // <-- undeclared variable
+    }, 1000);
+    // setTimeout only LOGS the code to be run after some time
+    //  when the "try" block is finished, the code inside setTimeout() is still not run, so it won't catch it
+  } catch (err) {
+    alert("won't work");
+  }
+
+  // Instead do this:
+  setTimeout(function () {
+    try {
+      noSuchVariable; // try...catch handles the error!
+    } catch {
+      console.log("error is caught here!");
+    }
+  }, 1000);
+</script>

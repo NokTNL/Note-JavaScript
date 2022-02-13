@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fetch Giphy</title>
+  </head>
+  <body>
+    <img src="#" />
+  </body>
+
+  <script>
+    const img = document.querySelector("img");
+
+    async function getCats() {
+      try {
+        const response = await fetch(
+          "https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats"
+        );
+        console.log("Netowrk response:");
+        console.log(response);
+        const result = await response.json();
+        const url = result.data.images.original.url;
+        console.log(url);
+        img.src = url;
+      } catch (err) {
+        console.error("I catch an error:\n", err.message);
+      }
+    }
+
+    getCats();
+  </script>
+</html>

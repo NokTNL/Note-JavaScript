@@ -1,0 +1,37 @@
+<script type="text/javascript">
+  function checkRange(val) {
+    var answer;
+    switch(val) {
+      /*  switch uses === for comparison so type must match
+          Works like this:
+          - if not matching one case, goes to next case;
+          - if one case is matched, the switch is 'turned on',
+            then all subsequent lines will run until it hits the
+            'break;' statement
+          - 'default' block will run if no cases is matched
+            default does not need a 'break' statement
+      */
+      case 1:
+      case 2:
+      case 3:
+        answer = "Low";
+        break;
+      case 4:
+      case 5:
+      case 6:
+        answer = "Mid";
+        break;
+      case 7:
+      case 8:
+      case 9:
+        answer = "High";
+        break;
+      default:
+        answer = "Error: input an integer between 1-9";
+    }
+    return answer;
+}
+
+  console.log(checkRange(-1));
+
+</script>

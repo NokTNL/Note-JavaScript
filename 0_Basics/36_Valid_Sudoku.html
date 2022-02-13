@@ -1,0 +1,49 @@
+<script>
+'use strict';
+var isValidSudoku = function(board) {
+    function hasDuplicate (arr) {
+        let counter = [];
+        for (let item of arr) {
+            if (!isNaN(item)) { // to ignore '.'
+                if (counter.includes(item)) return true;
+                else counter.push(item);
+            }
+        }
+        // otherwise returns nothing (=undefined=false)
+    }
+
+    //Row
+    for (let row of board) {
+        if (hasDuplicate(row)) return false ;
+    }
+
+    //Column
+    let columns = [];
+    for (let i = 0; i < 9; i++) columns.push([]);
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+            columns[j][i] = board[i][j];   // transpose
+        }
+    }
+
+    for (let col of columns) {
+        if (hasDuplicate(col)) return false ;
+    }
+
+    //Blocks
+    let blocks = [];
+    for (let i = 0; i < 9; i++) blocks.push([]);
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < blocks.length; j++) {
+            blocks[Math.floor(j/3)+Math.floor(i/3)*3][j%3+(i%3)*3] = board[i][j]; // Mapping to blocks
+        }
+    }
+    for (let block of blocks) {
+        if (hasDuplicate(block)) return false ;
+    }
+
+    return true; // If it hasn't returned false at the end
+
+};
+
+</script>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--  This is the browser syntax of import/export. Node.js has different syntax. 
+    Note: module function has limited support in modern browser: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules  -->
+    <!-- In the HTML, only a "module" type JS script can use import/export -->
+    <script type="module">
+      // !! modules are run in strict mode automatically
+      // ---> To import something into the module, you need to export something from another file.
+      // ---> Go to math_function.js
+      //
+      // Import
+      //
+      import { add } from "./math_function.js";
+      // Usually both ./ and .js are needed
+      import { add as add2 } from "./math_function.js"; // Can be reimported, but has to be in another name, otherwise:
+      //   import { add }; // SyntaxError: Identifier 'add' has already been declared
+      import { subtract, foo, bar } from "./math_function.js"; // multiple import
+
+      console.log(
+        `Module imports "add" from "math_function.js". add(2, 3) = ${add(2, 3)}`
+      ); // 5
+
+      // Import everything from a module
+      import * as myMathModule from "./math_function.js"; // creates the myMathModule object that contains the imported methods and props
+      const mySum = myMathModule.add(5, 12);
+      console.log(
+        `Module imports everything from "math_function.js" as "myMathModule". myMathModule.add(2, 3) = ${mySum}`
+      ); // 17
+
+      // Default import: import from a module without specifying what to import --> import the fallback (defualt export)
+      import self from "./math_function.js"; // omit {} to use default import; It will import the default export in that file
+      // this will put the imported method into the variable 'self'
+      console.log(
+        `Module imports the default from "math_function.js" as "self". self(77) = ${self(
+          77
+        )}`
+      ); // 77
+
+      // Code inside imported modules are run once after the first time it is imported
+      // Modules will only be imported ONCE, even when other modules import it again
+      // This means you can import a module for its side effects only (but only once)
+      import "./math_function.js"; // "WHEE"
+      // this will run the code in the imported file without really importing any values
+      console.log(whee); // ReferenceError: whee is not defined
+      // This is because modules have its own SCOPE
+
+      // !! Imports will be moved to the top at pre-compile stage (except for dynamic import)
+    </script>
+    <!-- The above, of course, can be written in an exteranl JS file -->
+    <script type="module" src="external.js"></script>
+    <!-- Go to external.js, you can do the same thing as above -->
+  </head>
+  <body></body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const requestCat = new Promise((resolve, reject) => {
+        const requestUrl =
+          "https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats";
+        //   const requestUrl =
+        //     "https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats";
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", requestUrl);
+        xhr.responseType = "json";
+        xhr.send();
+
+        xhr.onload = () => {
+          console.log("XHR request successful");
+          resolve(xhr);
+        };
+
+        xhr.onerror = () => {
+          reject(new Error("XHR request failed"));
+        };
+      });
+
+      requestCat
+        .then((xhr) => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log(`HTTP status ${xhr.status}`);
+          } else {
+            throw new Error(`HTTP status ${xhr.status}`);
+          }
+
+          let imageUrl;
+          try {
+            imageUrl = xhr.response.data.images.original.url;
+          } catch {
+            throw new Error("It does not seem to have returned a proper URL");
+          }
+
+          // If no error
+          appendImg(imageUrl, "cats");
+        })
+        .catch((error) => {
+          console.error(`ERROR: ${error.message}`);
+          appendImg("error.gif", "error");
+        });
+
+      const appendImg = (url, alt) => {
+        document.body.innerHTML = `
+            <img alt="${alt}" src=${url} />
+        `;
+      };
+    </script>
+  </body>
+</html>

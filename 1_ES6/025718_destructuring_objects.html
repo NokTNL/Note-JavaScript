@@ -1,0 +1,39 @@
+<script type="text/javascript">
+  const HIGH_TEMPERATURES = {
+    yesterday: 75,
+    today: 77,
+    tomorrow: 80,
+    March: { 1: 90, 2: 91, 3: 92 }, // High temp. for the first 3 days in March
+  };
+
+  const { today: highToday } = HIGH_TEMPERATURES; // It reads like:
+  //                           ^Destructure this object
+  //    ^Pass values into this object container
+  //      ^Then extract the value from the 'today' property,
+  //            ^and assign it to the const 'highToday'
+  console.log(highToday); // 77
+
+  const { yesterday: highYesterday, tomorrow: highTomorrow } =
+    HIGH_TEMPERATURES; // creates two const's
+  console.log(highYesterday + " " + highTomorrow); // 75 80
+
+  const { today } = HIGH_TEMPERATURES; // if no variable is assigned using a colon,
+  // it will assign to a new variable with the same name of the property
+  console.log(today); // 77
+
+  // Destructuring nested objects
+
+  const {
+    March: { 2: march2nd },
+  } = HIGH_TEMPERATURES; // Values passed into a nested container too
+
+  console.log(march2nd); // 91
+
+  // Objects destructured as parameters
+  const avgThreeDays = (
+    { yesterday, today, tomorrow } // Creates the destructuring 'container that takes one passed in object
+  ) => (yesterday + today + tomorrow) / 3;
+  myAvg = avgThreeDays(HIGH_TEMPERATURES); // pass in the OBJECT to get destructured
+  // Doing this will only pass in the data needed
+  console.log(myAvg);
+</script>

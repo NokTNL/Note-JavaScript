@@ -1,0 +1,62 @@
+<script>
+  "use strict";
+  const movie = {
+    info: {
+      title: "Star Wars",
+      director: "George Lucas",
+    },
+    id: 1,
+    getFormattedTitle: function () {
+      return this.info.title.toUpperCase();
+    },
+  };
+  // 'this' always refer to the thing that called the function in which uses 'this'
+  // (= the object name that precedes the function)
+  console.log(movie.getFormattedTitle()); // this = movie as it is called by movie
+
+  // If I extract the method out instead:
+  let { getFormattedTitle } = movie;
+  // getFormattedTitle();  // !! Throws error. If you do this you will have 'this' = undefined
+  // (or = window in non-strict mode) as it was not called from any object
+  // To fix the this binding problem, use bind() to bind 'this':
+  // getFormattedTitle = getFormattedTitle.bind(movie);
+  // Or just use call() which also has a "this" argument: (or apply(), same)
+  console.log(getFormattedTitle.call(movie));
+
+  // Arrow functions
+  // Arrow functions DON'T KNOW 'this'. It will not bind 'this' for what called it. When 'this' is called, it takes the 'this' from what ENCLOSES it: https://javascript.info/arrow-functions#arrow-functions-have-no-this
+  // e.g. When an arrow function is put INSIDE a (non-arrow) method of an object, and the method is called, 'this' = the object.
+  // An arrow function inside an object created using (traditional) constructor functions or classes (not object literal) always refer 'this' to the containing object, because of 'new'
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this#arrow_functions
+
+  // !! "Losing 'this'": If a method (non-arrow) is called as a CALLBACK, 'this' of the method (=the containing object) will be lost (--> undefined)
+  // In setTimeout, 'this' is always bound to the window object
+  // Inside an eventLister, the browser binds 'this' to the NODE responsible for triggering the event
+  // Solutions: https://javascript.info/bind
+  // --> Or use ARROW FUNCTIONS in objects created by constructors/classes: https://javascript.info/class#making-bound-methods-with-class-fields
+  // Doing this then 'this' will always be bound to the containing object by 'new'
+  // But the downside is you have a copy of the arrow function in every instances (instead of inherited in the prototype)
+  // This is more useful when it is called by event listeners, as it s discouraged in general to use arrow functions as methods
+
+  // constructor functions will do the same
+  class Button {
+    constructor(value) {
+      this.value = value;
+      //arrow function
+      this.click = () => {
+        console.log(this.value);
+      };
+      // non-arrow function
+      this.click2 = function () {
+        console.log(this.value + "2");
+      };
+    }
+  }
+
+  const button = new Button("hello");
+
+  button.click(); // hello --> even arrow function behaves correctly
+  button.click2(); // hello2
+  setTimeout(button.click, 1); // hello --> arrow functions is not affected by setTimeout's overidding 'this'
+  setTimeout(button.click2, 1); // undefined2 --> non-arrow function is susceptible
+</script>

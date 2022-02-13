@@ -1,0 +1,29 @@
+<head></head>
+
+<body>
+  <script>
+    // Constructor of object Student
+    function Student(name, grade) {
+      this.name = name;
+      this.grade = grade;
+    }
+
+    // New instance
+    let lauriaC = new Student("Lauria Clarins", "A");
+
+    // A prototype of an object can be accessable to all new instances of that object
+    // because the object inherits from the prototype.
+    // Every new instance won't have a copy of the things defined in the prototype, as
+    // opposed to what will happen when you define things in a constructor.
+
+    Student.prototype.sayName = function (times) {
+      // Using arrow functions above will affect the behaviour of 'this', doesn't work
+      for (let i = 0; i < times; i++) {
+        console.log(`${this.name} ${i}`);
+      }
+    }; // good to define a METHOD in a prototype so that it can be reused for all instances
+    // without having a copy in all of them
+
+    lauriaC.sayName(3); // will inherit from the prototype (even if the prototype is defined after it)
+  </script>
+</body>

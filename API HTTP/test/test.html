@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let socket = new WebSocket(
+        "wss://stream.binance.com:9443/ws/btcusdt@aggTrade"
+      );
+      let stack = [];
+
+      socket.onopen = function (e) {
+        console.log("[open] Connection established");
+      };
+
+      socket.onmessage = function (event) {
+        console.log(`[message] Message received`);
+        stack.push(event.data);
+      };
+
+      socket.onclose = function (event) {
+        if (event.wasClean) {
+          console.log(
+            `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+          );
+        } else {
+          console.log(
+            `[close] Connection died, code=${event.code} reason=${event.reason}`
+          );
+        }
+      };
+
+      socket.onerror = function (error) {
+        console.log(`[error] ${error.message}`);
+      };
+
+      // close the connection after 10 seconds
+      setTimeout(() => {
+        socket.close(1000, "client closed the connection");
+      }, 10000);
+    </script>
+  </body>
+</html>

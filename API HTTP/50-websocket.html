@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /** Websocket(ws): when you need continous data exchange without polling (keep sending new requests) **/
+      // Establish a new ws connection using the WebSocket constructor:
+      let socket = new WebSocket(
+        "wss://javascript.info/article/websocket/demo/hello"
+      );
+      // Set up 4 event listener to listen to ws events
+      // !! You can use addEventListener too: socket.addEventListener("open", function(){})
+      // .onopen event listener will be triggered when the ws connection is established (upgraded from HTTP):
+      socket.onopen = function (e) {
+        console.log("[open] Connection established");
+        console.log("Sending to server");
+        // .send(): send message to the server
+        socket.send("My name is John");
+      };
+
+      // .onmessage triggered when received new message from the server, wrapped in event.data
+      socket.onmessage = function (event) {
+        console.log(`[message] Data received from server: ${event.data}`);
+      };
+
+      // .onclose
+      socket.onclose = function (event) {
+        // A normal close will have the following values in the event:
+        // event.code === 1000
+        //       code === 1006 implies the connection was broken
+        // event.wasClean === true (clean close)
+        // Also the server will tell the reason in event.reason
+        if (event.wasClean) {
+          console.log(
+            `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+          );
+        } else {
+          // e.g. server process killed or network down
+          // event.code is usually 1006 in this case
+          console.log("[close] Connection died");
+        }
+      };
+      // You can also use socket.close() to close the connection yourself
+
+      // .onerror
+      socket.onerror = function (error) {
+        console.log(`[error] ${error.message}`);
+      };
+
+      // !! You can assign a new WebSocket to "socket",
+      // but the original socket will stay in the heap as long as the connection
+      // is not closed and the event listeners are still there.
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<script>
+  // Promsise.race: return the fatest settled Promise (fulfilled/rejected)
+  Promise.race([
+    getPosition(), // If position not received after the timer, only the timer will be returned
+    setTimer(10000), // If the position arrives faster than the timer, only the position will be printed
+  ]).then(console.log);
+
+  // Promise.all: wait for all promises to RESOLVE, then
+  // ... return a Promise with result = an array of ALL promises' result
+  // !! if one of the promises is rejected, it ONLY returns the rejected promise (bc. not all are fulfilled)
+  Promise.all([
+    getPosition(), //
+    setTimer(10000), //
+  ]).then(console.log); // Array [Position, "timer done"]
+
+  // Promise.allSettled (!! relatively new)
+  // unlike .all, returns the result of all Promises, regardless of being fulfilled/rejected
+  // returns a Promise with result = an array of OBJECTS containing each promise's status and result (like a "report")
+  Promise.allSettled([
+    getPosition(), // <-- e.g. this get rejected
+    setTimer(1000), // <-- e.g. this get rejected
+  ]).then(console.log); // prints:
+  /* 
+    [
+      {status: 'rejected', reason: GeolocationPositionError},
+      {status: 'fulfilled', value: 'timer done'}
+    ]
+  */
+</script>

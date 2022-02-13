@@ -1,0 +1,34 @@
+<script type="text/javascript">
+  //Create an object using constructor function, in ES5:
+  var SpaceShuttle = function(targetPlanet){
+    let spaceShuttle = {};
+    spaceShuttle.targetPlanet = targetPlanet; // set the property 'targetPlanet's value to the passed in argument
+    return spaceShuttle; // returns the whole object created
+  } // This is an example of a constructor function
+
+  var zeus = SpaceShuttle('Jupiter'); // zeus is now a new object created using SpaceShuttle() (which returns an object)
+  console.log(zeus.targetPlanet);   // 'Jupiter'
+
+  // Using the 'new' creates a new empty object, called 'this', automatically:
+  var SpaceShuttle = function(targetPlanet){
+    // const this = {};
+    this.targetPlanet = targetPlanet;
+    // return this;
+  };
+  var zeus = new SpaceShuttle('Mars');
+  console.log(zeus.targetPlanet);   // 'Mars'
+
+  // !! You can't do constructor and 'new' with arrow functions: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+
+  // In ES6 you can mimick the class syntax in other OOP languages, but in effect
+  // it's just the same thing as above:
+  class SpaceShuttle_ {
+    constructor(targetPlanet){
+      this.targetPlanet = targetPlanet;
+    }
+  }
+  var zeus = new SpaceShuttle_('Pluto');
+  console.log(zeus.targetPlanet);
+
+
+</script>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const requestCat = async () => {
+        const content = await fetch(
+          "https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats"
+          // "https://api.giphy.com/v1/gifs/translate?api_key=u6vbW7hk3oRNwwAcBT1HGvJ5BMVyKD37&s=cats"
+        ).then((response) => {
+          if (response.ok) {
+            console.log(`fetch response ok, status ${response.status}`);
+            return response.json();
+          } else throw new Error(`Bad HTTP status ${response.status}`);
+        });
+
+        try {
+          const url = content.data.images.original.url;
+          appendImg(url, "cat");
+        } catch {
+          throw new Error("Server does not seem to return any URL");
+        }
+      };
+
+      const appendImg = (url, alt) => {
+        document.body.innerHTML = `
+            <img alt="${alt}" src=${url} />
+        `;
+      };
+
+      requestCat().catch((error) => {
+        console.error(`ERROR in requestCat: ${error.message}`);
+        appendImg("error.gif", "error");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<script type="text/javascript">
+  // Recursion = function calling itself inside block
+  // An alternative to calling for/while loop
+
+  //Countdown function
+  function countdown(i){
+    if (i < 1) { // base case: when to quit the recursion
+      return;
+    } else {  // recurive case: when to call itself
+      console.log(i);
+      countdown (i - 1);
+    }
+  }
+
+  countdown(10);
+
+  // Sum the first n elements in an array
+  myArray = [1,1,1,1,1,1,1,1,1,1,1];
+  function sum(arr, n){
+    if (n <= 0) {
+      return 0;
+    }
+    else {
+      return sum(arr, n - 1)+ arr[n - 1]; // Sum of 0~(n-1)th elements = (n-1)th element + Sum of 0~(n-2)th element
+    }
+  }
+
+  console.log(sum(myArray, 10));
+
+  // Creating a countdown array
+  //Method 1: use unshift()
+  function countdown(n){
+    if (n < 1) {
+      return [];
+    } else {
+      const countArray = countdown(n - 1);
+      countArray.unshift(n);
+      return countArray;
+    }
+  }
+  //Method 2: use concat()
+  // push() returns length of the changed array, concat() does not change the array
+  // but returns the new array
+  function countdown2(n){
+    if (n < 1) {
+      return [];
+    } else {
+      return [n].concat(countdown(n - 1));
+    }
+  }
+
+  console.log(countdown(5));
+  console.log(countdown2(5));
+
+  //Create a range of integers
+  function rangeOfNumbers(startNum, endNum) {
+    if (startNum > endNum) {
+      return [];
+    }
+    else {
+      return [startNum].concat(rangeOfNumbers(startNum + 1, endNum));
+    }
+  }
+  console.log(rangeOfNumbers(2, 5));
+
+</script>

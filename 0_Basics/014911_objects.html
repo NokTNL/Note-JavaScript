@@ -1,0 +1,53 @@
+<script type="text/javascript">
+  var myDog = {
+    // Objects are properties<->data pairs, like dictionaries
+    name: "Daisy", // Property names no need quotes, they are strings by default
+    legs: 4,
+    "my friends": ["Ceri", "Mat"], // EXCEPT when the property name have space characters
+    1: "Woof!", // numbers can also be properties, they will be coerced into strings
+    2: "Hello!",
+  };
+
+  //Use dot notation to retrieve object properties
+  console.log("My name is " + myDog.name + "\n");
+  // bracket notation for retrieving properties; required for
+  // - elements with space characters OR is a number
+  // - using variables to retrieve properties
+  console.log(myDog["my friends"] + " are my friends\n");
+  var myNum = 1;
+  var myTag = "name";
+  console.log(`"` + myDog[myNum] + `" says ` + myDog[myTag] + "\n");
+
+  //Changing/adding properties of an object
+  myDog[2] = "Zzzz";
+  console.log(myDog[2] + "\n");
+  myDog.sex = "Female";
+  console.log(myDog.sex);
+  //Delete properties of an object
+  delete myDog.sex;
+  console.log(myDog.sex); // undefined
+  console.log("sex" in myDog); // false
+  // !! Setting the value to undefined only hides it from display, the property is still there
+  myDog.sex = undefined;
+  console.log(myDog); // the property is still there
+  console.log("sex" in myDog); // true!!!
+  // !! setting the property's value to "null" instead just clear the value but won't delete the property
+  //Check if a property is present in an object
+  delete myDog.sex;
+  console.log(myDog.hasOwnProperty("sex")); // false
+  console.log("sex" in myDog); // same, also false
+
+  //Flexible data structure
+  //Objects can be placed in an array, or another object
+  var myComplexObj = [
+    {
+      item1: "blah",
+      obj1: { "item 2": "blahblah" }, // object in an object
+    }, // 0th element in the array
+    {
+      item3: "BLAH",
+    }, // 1st element in the array
+  ];
+  //Nested objects can be accessed by dot/bracket notation like arrays
+  console.log(myComplexObj[0].obj1["item 2"]); // prints 'blahblah'
+</script>

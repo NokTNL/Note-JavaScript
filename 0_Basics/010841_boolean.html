@@ -1,0 +1,39 @@
+<script type="text/javascript">
+  function checkTrueFalse(item) {
+    if (item) { // any data type can be classified as true or false
+      return true;
+    }
+    else {
+      return false;
+    }
+    // JS uses 'else if'
+  }
+  console.log(checkTrueFalse(true));
+
+  //Comparison operators
+  console.log(3 == '3'); // True as JS will do type conversino
+  console.log(3 === '3'); // False: 'strictly equal', won't do type conversion
+
+  console.log(3 != '3'); // false
+  console.log(3 !== '3'); // true
+  // Also >, <, >=, <=
+  // num<->string: JS converts numeric string to number & non-numeric strings to NaN
+  // string<->string: JS compares alphabetically (e.g. "2" < "12" is false bc. "2" > "1")
+
+  // Logic operators
+  var val = 9;
+  if ( (val % 3 == 0) && (val % 2 == 0) ) {
+    console.log(val + " can be divided by both 2 and 3");
+  }
+  else {
+    console.log(val + " cannot be divided by both 2 and 3");
+  }
+  // also || (or), ! (not)
+  // NOTE: && and || returns one of the daughter EXPRESSIONS, not just dry true/false values:
+  // &&: returns 1st expr if false, otherwise returns 2nd expr ('... and then do...')
+  true && false // 1st expr = true, returns 2nd expr (false)
+  // ||: returns 1st expr if true, otherwise returns 2nd expr ('...or do...')
+  false || true // 1st expr = false, returns 2nd expr (true)
+
+
+</script>

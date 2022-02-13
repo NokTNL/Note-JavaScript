@@ -1,0 +1,36 @@
+<script type="text/javascript">
+  "use strict"; // then the below doesn't work:
+  //  x = 3.14; // from ES5 varaibles can't be declaring without keywrods
+
+  // Double declaration
+  var catName = "Otis";
+  var catName = "Matthew"; // Double declaration no problem using var
+  console.log(catName);
+
+  let dogName = "Daisy";
+  //  let dogName = 'Natalie'; // Error when double declaring using let
+
+  // !! Use let and const in place of var whenever possible!!!
+
+  // let, const has block scope
+  function checkScope() {
+    let i = "function scope"; // in the function block scope
+    if (true) {
+      let i = "block scope"; // in the 'if' block scope; different from the function one
+      console.log(`'if' block i has ` + i);
+    }
+    console.log(`Function scope i has ` + i); // won't be affected by the 'if' block
+  }
+  checkScope();
+
+  // 'var' hoisting
+  // var does hoisting of variable DECALRATIONS (but not initialisation), let/const does not
+  console.log(name);
+  var name = "NAME";
+  // is equal to:
+  var name = undefined; // --> HOISTED
+  console.log(name); // undefined
+  name = "NAME";
+  // Browser does hoisting for let/const too but DOESN'T INITIALISE it to = undefined --> will get an error
+  // So using let/const will force you to do good practice of declaring before calling
+</script>

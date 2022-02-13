@@ -1,0 +1,55 @@
+<script type="text/javascript">
+  "use strict";
+  // Use for loop to loop over arrays; or use for (...of...) syntax
+  const myArray = ["A", "B", "C"];
+  for (let i = 0; i < myArray.length; i++) {
+    console.log(myArray[i]);
+  }
+
+  // filter(testfunc)  !! Does not change array
+  let myArray = [1, 10, 5, 3];
+  let myFilteredArr = myArray.filter((item) => {
+    return item > 4;
+  });
+  // pass each item into the testfunc as the first argument
+  // testfunc returns an array of true/false value corr. to the input array
+  // filter() only push elements with a true value into a new array
+  console.log(myFilteredArr); // 10, 5
+
+  // In ES6 Can be further shorthanded to:
+  myFilteredArr = myArray.filter((item) => item > 4);
+  console.log(myFilteredArr); // 10, 5
+
+  // reduce(function, initVal)   !! Does not change original array
+  // reduce an array into one value, like sum, max, average, etc.
+  // function form: function(prevValue, currentVal){statment_block}
+  //                         returned    current
+  //                         from last   array element
+  //                          call
+  // 'initVal' is optional, prevVal = initVal for first call;
+  // If no initVal is supplied, prevVal = first element, currentVal = second element
+  // Example: Sum
+  myArray = [1, 10, 5, 3];
+  let myReducedArr = myArray.reduce((total, num) => total + num);
+  // The sum will be returned and fed in to the prevVal of the next iteration
+  console.log(myReducedArr); // 19
+  // Example: Maximum (alternative, use sort() then pick the last element)
+  myArray = [1, 10, 5, 3];
+  myReducedArr = myArray.reduce((max, num) => {
+    if (num > max) {
+      return num;
+    } else return max;
+  });
+  console.log(myReducedArr); // 10
+  // Example: balance tracker (using initVal)
+  const myInitBal = 100;
+  let myTx = [-10, 50, -2];
+  let myFinalBal = myTx.reduce((total, change) => total + change, myInitBal);
+  console.log(myFinalBal); // 138
+
+  // map() !! Does not change array
+  // run the function over the element fed in, push it to a new array
+  myArray = [1, 10, 5, 3];
+  let myMappedArr = myArray.map((num) => num ** 2);
+  console.log(myMappedArr); // [1, 100, 25, 9]
+</script>

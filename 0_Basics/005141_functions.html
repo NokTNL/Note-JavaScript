@@ -1,0 +1,28 @@
+<script type="text/javascript">
+  function findDiff(a, b) {
+    return a - b; // function without return statment will have an "undefined" return value
+  }
+  console.log(findDiff(10, 7) + "\n");
+
+  //Scope of variables
+  // A function produces a scope for var, let, const variables & paramters,
+  // BUT! variables declared in a function without using a var, let, const keyword will still be global
+  function testScope(param) {
+    var A = 1;
+    const B = 2;
+    let C = 3;
+    param = 4;
+    oopsGlobal = 5;
+    console.log(A, B, C, param, oopsGlobal);
+  }
+  testScope();
+
+//  console.log(A);
+//  console.log(B);
+//  console.log(C);
+//  console.log(param); // all of these will throw errors
+  console.log(oopsGlobal); // this one still works
+
+  // When local variables have the same name as a global variable, the local one takes precedence
+
+</script>

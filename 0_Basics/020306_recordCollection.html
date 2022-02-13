@@ -1,0 +1,72 @@
+<script type="text/javascript">
+  /*
+  Test description:
+
+  You start with an updateRecords function that takes an object literal, records,
+  containing the musical album collection, an id, a prop (like artist or tracks),
+  and a value. Complete the function using the rules below to modify the object
+  passed to the function.
+
+  - Your function must always return the entire record collection object.
+  - If prop isn't tracks and value isn't an empty string, update or set that
+  album's prop to value.
+  - If prop is tracks but the album doesn't have a tracks property, create an
+  empty array and add value to it.
+  - If prop is tracks and value isn't an empty string, add value to the end of
+  the album's existing tracks array.
+  - If value is an empty string, delete the given prop property from the album.
+
+  */
+  const recordCollection = {  // top object (Collection)
+    2548: {       // element object (album ID)
+      albumTitle: 'Slippery When Wet', // properties are coerced to strings
+      artist: 'Bon Jovi',
+      tracks: ['Let It Rock', 'You Give Love a Bad Name'] // Array
+    },
+    2468: {
+      albumTitle: '1999',
+      artist: 'Prince',
+      tracks: ['1999', 'Little Red Corvette']
+    },
+    1245: {
+      artist: 'Robert Palmer',
+      tracks: []
+    },
+    5439: {
+      albumTitle: 'ABBA Gold'
+    }
+  };
+
+// Only change code below this line
+function updateRecords(records, id, prop, value) {
+  // records: the whole collection object you want to updateRecord
+  // id: album id (e.g. 2468)
+  // prop: new properties of the album you want to add
+  // value: value corr. to the property
+  if (value === '') {           // Delete property if value is empty, so no need assign
+    delete records[id][prop];
+  }
+  else if (prop == 'tracks') {  // the 'tracks' property is an array, different treatment
+    records[id].tracks = records[id].tracks || []; // shortcircuit conditional:
+    // assign itself, OR assign an empty array to the new property
+    // because for objects when there is no such property, will simply return 'undefined' (false)
+    // Also possible to use hasOwnProperty()
+    records[id].tracks.push(value);
+  }
+  else {                        // Properties other than 'tracks' have string values
+    records[id][prop] = value;  // Each [] goes down to one level lower object
+  }
+
+  return records;
+}
+
+// Test code
+updateRecords(recordCollection, 5439, 'artist', 'ABBA');
+updateRecords(recordCollection, 5439, "tracks", "Take a Chance on Me");
+updateRecords(recordCollection, 2548, "artist", '');
+updateRecords(recordCollection, 1245, "tracks", "Addicted to Love");
+updateRecords(recordCollection, 2468, "tracks", "Free");
+updateRecords(recordCollection, 2548, "tracks", "");
+console.log(recordCollection);
+
+</script>
