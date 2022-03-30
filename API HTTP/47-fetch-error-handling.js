@@ -7,6 +7,7 @@ function sendHttpRequest(method, url, data) {
     body: JSON.stringify(data),
   }).then((response) => {
     // response.ok = true when 200 <= response.status < 300
+    // !!! fetch does not reject on HTTP error codes!!! It only rejects when no request can be made (e.g. network failure)
     if (response.ok) return response.json();
     else {
       // Sometimes even if the HTTP status is bad, it still returns some useful info
