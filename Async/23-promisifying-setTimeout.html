@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // To make a setTimeout function into a Promise that resolves after the timeout, ...
+      // ... return a new Promise in a function:
+      function setTimeoutPromise() {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve("Done");
+          }, 3000);
+        });
+      }
+      setTimeoutPromise().then(console.log); // "Done"
+
+      // Alternatively, using async/await:
+      async function setTimeOutAsync() {
+        // Since it is await here, the Promise returned by this async function will be PENDING until reaching the timeout
+        const result = await new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve("Done again!");
+          }, 3000);
+        });
+        // Then it will return a RESOLVED Promise with the result
+        return result;
+      }
+
+      setTimeOutAsync().then(console.log); // "Done again!""
+    </script>
+  </body>
+</html>

@@ -13,6 +13,8 @@
   async function test() {
     // console.log(noSuchVar); // If throws error, returns a rejected promise & result = the Error
     return "Done"; // Otherwise, returns a new, resolved Promise, result = what is returned here
+    // !! You will realise that it either resolves or rejects IMMEDIATELY. ...
+    // ... To make the function returns a PENDING Promise, see "await" below
   }
   test().then(console.log); // "Done"
 
@@ -29,12 +31,15 @@
     let posData;
     let timerData;
     try {
-      // await can be put before any functions that RETURNS A PROMISE (e.g. fetch)
-      // anything not Promise-returning put after await will be turned into a resolved Promise
-      // !! can only use await in async functions (or in JS modules)
+      // "await" makes an async function returns a PENDING Promise, until the expression that comes after it has been resolved
+      //  - so it can be put before any Promise-returning expressions, such as fetch()
+      //  - anything not Promise-returning put after await will be turned into an immediately resolved Promise
+      // So "await" has the effect of "PAUSING" the async function
+      // !! can only use await inside async functions, or in JS modules
       posData = await getPosition(); // <-- the remaining code in this function will not be run until this function is resolved
       // after the Promise is resolved, the "await ..." expression evaluates to the result of the Promise (and assigned to posData here)
-      // the remining code (wrapped by await in an invisible .then) will run only the await code is settled
+      // the remining code (equiv. to be wrapped by await in an invisible .then) ...
+      // ... will run only the await code has been settled
       timerData = await setTimer(1000);
     } catch (error) {
       // await will throw (NOT return) the rejected RESULT (usually an Error object) if the promise is REJECTED
