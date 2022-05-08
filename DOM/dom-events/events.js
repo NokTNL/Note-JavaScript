@@ -34,16 +34,16 @@ document.querySelector("#nested-button1").addEventListener("click", () => {
   console.log("nested-button clicked");
 }); // The button event listener is triggered , then it bubbles and the containing div's listener is also triggered
 // Activate capturing so that the top listener is triggered first
-document.querySelector("#div2").addEventListener("click", () => {
-  console.log("div clicked");
-});
-document.querySelector("#nested-button2").addEventListener(
+document.querySelector("#div2").addEventListener(
   "click",
   () => {
-    console.log("nested-button clicked");
+    console.log("div clicked");
   },
   { capture: true }
-); // now the div listener is triggered first, then the button
+);
+document.querySelector("#nested-button2").addEventListener("click", () => {
+  console.log("nested-button clicked");
+}); // now the div listener is triggered first, then the button
 // prevent bubbling: use event.stopPropagation()
 document.querySelector("#div3").addEventListener("click", () => {
   console.log("div clicked");

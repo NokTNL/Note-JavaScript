@@ -8,8 +8,14 @@
   </head>
   <body>
     <script>
-      // To make a setTimeout function into a Promise that resolves after the timeout, ...
-      // ... return a new Promise in a function:
+      /*
+       * Make a Promise-returning function that resolves after async code execution
+       */
+      // Let say you want to have a Promise that resolves after a timeout
+      // what you need to do is:
+      // 1. make a new function that returns a Promise
+      // 2. INISDE the Promise executor, call your async code
+      // 3. make the CALLBACK of that function RESOLVE this Promise
       function setTimeoutPromise() {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
@@ -17,6 +23,7 @@
           }, 3000);
         });
       }
+      // 4. Call your promisfied setTimeout here, which will return a Promise and you can use .then
       setTimeoutPromise().then(console.log); // "Done"
 
       // Alternatively, using async/await:
@@ -30,8 +37,21 @@
         // Then it will return a RESOLVED Promise with the result
         return result;
       }
-
       setTimeOutAsync().then(console.log); // "Done again!""
+
+      /*
+       * event callbacks
+       */
+      const btn = window.document.getElementById("btn");
+      // To make an event trigger a Promise resolve, inside that Promise's executor, ...
+      // ... make the event's callback run the resolve function of the promise
+      const btnPromise = new Promise((resolve, reject) => {
+        btn.addEventListener("click", resolve);
+      });
+
+      btnPromise.then(() => {
+        console.log("btnPromise resolved");
+      });
     </script>
   </body>
 </html>
