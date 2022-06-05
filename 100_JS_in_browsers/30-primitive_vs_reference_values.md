@@ -1,0 +1,4 @@
+- Variables with **Primitive** values are stored on the **stack**. The variable store the value by itself as well.
+  - The primitive value stored as such is **immutable**, but the variable may be assigned another (immutable) primitive value
+- Variables with **Reference** values have the _values_ stored in the **heap**, while the _variable_ is stored on the **stack** and it stores a **pointer** that points to the value stored in the heap.
+  - reference values are mutable (unless you `Object.freeze` them)

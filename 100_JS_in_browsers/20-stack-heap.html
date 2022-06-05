@@ -1,0 +1,31 @@
+<!-- 
+    Heap = long-term storage, Stack = execute scripts when they are pushed into it
+ -->
+<script>
+  // The whole global script is pushed into the STACK as an "anonymous" function when executed
+
+  // both getName and greet are stored in the HEAP after initialisation
+  // they won't go away even after the whole script has finished running
+  function getName() {
+    return prompt();
+  }
+
+  function greet() {
+    const name = getName();
+    console.log("Hi", name);
+  }
+
+  // When we call greet() here, `greet` is executed by being pushed on top of our anonymous global function:
+  // STACK: (anonymous) --> greet()
+  // The top function on the stack is ALWAYS the active function being executed at the momemt
+  greet();
+  // Inside greet we also call getName, so the stack becomes:
+  // STACK: (anonymous) --> greet() --> getName()
+  // getName() also calls prompt() so we have yet another layer:
+  // STACK: (anonymous) --> greet() --> getName() --> prompt()
+  //
+  // When a function RETURNS, it is POPPED from the stack
+  //
+
+  // When the whole GLOBAL (anonymous) script has finished execution, (anonymous) will be popped from the stack as well, leaving it empty
+</script>
