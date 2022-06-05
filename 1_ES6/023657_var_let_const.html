@@ -24,13 +24,15 @@
   checkScope();
 
   // 'var' hoisting
-  // var does hoisting of variable DECALRATIONS (but not initialisation), let/const does not
+  // var does hoisting of variable DECALRATIONS and INITIALISE with "undefined" value in advance
+  // So you can call a var variable before initialisation; you will just get an undefined value
   console.log(name);
   var name = "NAME";
   // is equal to:
   var name = undefined; // --> HOISTED
   console.log(name); // undefined
   name = "NAME";
-  // Browser does hoisting for let/const too but DOESN'T INITIALISE it to = undefined --> will get an error
+  // let/const are only hoisted for their DECLARATIONS but NOT INITIALISATIONS to "undefined"
+  // calling a let/const variables before INITIALISATION will give ERROR
   // So using let/const will force you to do good practice of declaring before calling
 </script>

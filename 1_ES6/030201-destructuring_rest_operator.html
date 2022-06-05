@@ -1,0 +1,24 @@
+<script type="text/javascript">
+  // Apart from function parameters, rest operators can be used to "collect" from a destructured array/object
+  // This result in either an new ARRAY or OBJECTS (unlike from parameter fields it can only result in an array)
+  // - Note: for objects it is only in "Rest/Spread Properties for ECMAScript proposal (stage 4)" but all major browsers support it
+  // Arrays --> new array
+  const [first, second, ...num] = [1, 2, 3, 4, 5];
+  num; // [3,4,5]
+  // Objects --> new object
+  let { a, b, ...rest } = { a: 10, b: 20, c: 30, d: 40 };
+  rest; // {c: 30, d: 40}
+
+  // Also work for destructuring objects as parameters
+  function logRest({ a, b, ...rest }) {
+    console.log(rest);
+  }
+  console.log(logRest({ a: 10, b: 20, c: 30, d: 40 })); // {c: 30, d: 40}
+
+  // You can even spread values on the expression side, destructure it, then recollect it with a rest operator as a new array:
+  let arr5 = [5, 10];
+  const [...arr7] = [...arr5];
+  //                 ^ spread into array literal
+  //     ^ rest into new array
+  console.log("arr7: " + arr7); // arr7: 5,10
+</script>
