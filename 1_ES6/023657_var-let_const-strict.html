@@ -1,0 +1,63 @@
+<script type="text/javascript">
+  /**
+   * Strict mode
+   */
+  // From ES5 we have the STRICT MODE that disables some sloppy features in original JS
+  "use strict";
+
+  /**
+   * Implicit global property declaration prohibited in strict mode
+   */
+  // In non-strict mode, you can define a "variable" like this:
+  //   x = 3.14;
+  // What it does is to actually assign to a PROPERTY in the GLOBAL OBJECT (`window`), so it is equivalent to:
+  //   window.x = 3.14;
+  // And calling `x` is exactly the same as calling `window.x`
+  // If you use strict mode, `x = 3.14` in the global context will THROW ERROR --> safer as we don't pollute the global object anymore
+
+  /**
+   * The sloppy `var`
+   */
+  // By declaring a `var` (and *function declaration*) in the GLOBAL context, you are STILL assigning a new property to the global object, except that this property is non-configurable.
+  var y = 10;
+  console.log(window.y); // 10
+  // Also, `var` allows double declarations:
+  var catName = "Otis";
+  var catName = "Matthew"; // Double declaration no problem using var
+  console.log(catName); // "Matthew"
+
+  // 'var' hoisting
+  // `var` does hoisting of variable DECALRATIONS and INITIALISE with "undefined" value in advance
+  // So you can call a var variable before initialisation; you will just get an undefined value
+  console.log(name);
+  var name = "NAME";
+  // is equal to:
+  var name = undefined; // --> HOISTED
+  console.log(name); // undefined
+  name = "NAME";
+
+  // !!! Use let and const in place of `var` whenever possible!!!
+
+  /**
+   * let & const
+   */
+  // 1. In the global context, `let` and `const` does NOT create properties inside the global object
+  // 2. `let` and `const` disallows double declarations:
+  let dogName = "Daisy";
+  //  let dogName = 'Natalie'; // Error when double declaring using let
+
+  // 3. let, const has block scope (inclusing function scope); `var` only has function scope
+  function checkScope() {
+    let i = "function scope"; // in the function block scope
+    if (true) {
+      let i = "block scope"; // in the 'if' block scope; different from the function one
+      console.log(`'if' block i has ` + i);
+    }
+    console.log(`Function scope i has ` + i); // won't be affected by the 'if' block
+  }
+  checkScope();
+
+  // 4. let/const are only hoisted for their DECLARATIONS but NOT INITIALISATIONS to "undefined"
+  // calling a let/const variables before INITIALISATION will give ERROR
+  // So using let/const will force you to do good practice of declaring before calling
+</script>

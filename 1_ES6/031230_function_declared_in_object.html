@@ -1,11 +1,10 @@
 <script type="text/javascript">
-
   // You can make property names into functions in an object:
   let bicycle = {
     gear: 2,
-    setGear: function(newGear) {
+    setGear: function (newGear) {
       this.gear = newGear; // changes bicycle.gear
-    }
+    },
   };
 
   bicycle.setGear(3); // call the function by dot notation
@@ -14,11 +13,12 @@
   // In ES6 you can shorthand it into:
   bicycle = {
     gear: 2,
-    setGear(newGear) {  // Property name with ()
+    setGear(newGear) {
+      // Property name with ()
       this.gear = newGear;
-    }
-  }
+    },
+    // !!! Note that it is not entirely identical to using the functional expression above (e.g. inheritance) but for most purposes it is the same
+  };
   bicycle.setGear(5);
   console.log(`Bicycle gear set to ${bicycle.gear}`);
-
 </script>

@@ -1,0 +1,11 @@
+<script>
+  // function.prototype.bind for partial functions
+  function sum(...num) {
+    return num.reduce((prev, curr) => prev + curr);
+  }
+
+  // `bind` can bind extra "preset" arguments to a function
+  // Note: The "this" argument here can be anything if we are not using it
+  const add5 = sum.bind(this, 5);
+  console.log(add5(10)); // 15
+</script>
