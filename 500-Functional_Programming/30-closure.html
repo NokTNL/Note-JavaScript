@@ -1,0 +1,59 @@
+<script>
+  // Web dev simplfied: https://www.youtube.com/watch?v=3a0I8ICR1Vg
+  // More on lexical environments: https://javascript.info/closure#lexical-environment
+
+  // A CLOSURE is a record of a function together with the states of its surrounding scopes (known as the "lexical environment").
+  // A JavaScript function always creates closure when it is created
+  //
+  // One interesting result of closure in JS is that an inner function "remembers" all the variables & parameters accessible to it, ...
+  // ... incl. those from the outer scopes, even when the scope holding those values no longer exists
+  // Example:
+  function outerFunc(outerVar) {
+    function innerFunc(innerVar) {
+      console.log(`outerVar: ${outerVar}`);
+      console.log(`innerVar: ${innerVar}`);
+    }
+    return innerFunc;
+  }
+
+  const newInnerFunc = outerFunc("Outer");
+  // Imagine what happens when executing outerFunc:
+  /*
+    function outerFunc(outerVar) {
+
+      // When this function is declared, it records all the variables accesible to it, including all of those in the outer scopes
+      function innerFunc(innerVar) {
+        console.log(`outerVar: ${outerVar}`);
+        console.log(`innerVar: ${innerVar}`);
+      }
+
+      return innerFunc;
+      //     ^^^^^ the returned function still "remembers" the variable `outerVar` and it is still accesible to it
+      // even though the function holding it (`outerFunc`) has already finished execution and the scope has already gone 
+    }
+   */
+  newInnerFunc("Inner"); // "outerVar: Outer, innerVar: Inner"
+
+  // Functions stored in the heap DO NOT REMEMBER what parameters was put into it when it was last executed (i.e. push into the STACK as an "instance")
+  // So when we repeat what we did above, but with a new `outerVar`, the new function returned will have a closure that only remembers the new `outerVar`
+  const newInnerFunc2 = outerFunc("OWOWOWWWW");
+  newInnerFunc2("Inner"); // "outerVar: OWOWOWWWW, innerVar: Inner"
+
+  // And when the outer scope has NOT gone yet, its variables is (of course) still accesible to the inner scope, ...
+  // ... AND the inner scope will always refer to the latest value of it
+
+  let globalVar = "GLOBAL";
+
+  function outerFunc2() {
+    function sayGlobalVar() {
+      console.log(`globalVar : ${globalVar}`);
+    }
+    return sayGlobalVar;
+  }
+
+  const sayGlobalVar = outerFunc2(); // `globalVar` is remembered by `sayGlobalVar`
+  sayGlobalVar(); // "GLOBAL"
+
+  globalVar = "OOPS!"; // <-- `globalVar` is still modifiable by us
+  sayGlobalVar(); // "OOPS!"
+</script>
