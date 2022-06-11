@@ -1,54 +1,105 @@
 <script>
   "use strict";
-  // `this` tells us FROM WHERE a function is being executed.
-  // What is returned from `this` depends on in what EXECUTION CONTEXT (the "function") `this` was called.
+  // On `this`: https://javascript.info/object-methods
   /**
-   * Global context
+   * Why do we need `this`?
    */
-  // When 'this' is called in the GLOBAL context, it always refer to the global object ("window")
-  this.b = "Something"; // Assigning a value to the "window" object
-  console.log(this.b); // "Something", also identical to:
-  console.log(b); // "Something"
-
-  /**
-   * Function context
-   */
-  // Inside a FUNCTION, the function will bind 'this' to the OBJECT that called the function
-  // Sometimes it is called the "before-dot" object
-  // Remember a JS object can have propeties that bear functions as values (a "method"):
-  const movie = {
-    info: {
-      title: "Star Wars",
-      director: "George Lucas",
-    },
-    id: 1,
-    // This is a method of `movie`
-    getFormattedTitle: function () {
-      return this.info.title.toUpperCase();
+  // In OOP, everything are grouped in different OBJECTS.
+  // Objects can have PROPERTIES (we learned that already) as well as METHODS (functions belonged to the object)
+  //    - In JS, methods are actually also properties but hold FUNCTIONS as values (using function expression syntax)
+  // Let say we have the following object:
+  const dog = {
+    // Properties
+    name: "Bob",
+    age: 6,
+    // Methods
+    bark: function () {
+      console.log("Woof!");
     },
   };
-  console.log(movie.getFormattedTitle()); // When `getFormattedTitle` is executing, `this` inside `getFormattedTitle` === `movie`
+  dog.bark(); // "Woof!"
 
-  // That means if I extract the method out from one object and assign it to another object, ...
-  // ... it still refers to the SAME function in the memory (as functions are passed by reference), ...
-  // but the new method will have a new `this`!
-  const newMovie = {
-    info: {
-      title: "Hobbits",
+  // How about if we want the methods to do something related to the PROPERTIES?
+  // We can't just call `name` or `age` as they are not declared as VARIABLES (using `const` or `let`)
+  //  - !!! An object in JavaSript CAN'T OWN variables! (unlike in the global script / in functions)
+  // Instead, we need something to refer to THIS object and retrieve THIS object's properties
+  // --> *** that is what `this` is for: enables methods to retrieve the SAME object's properties
+  // e.g. `this` refers to the `dog2` here
+  const dog2 = {
+    name: "Bob",
+    age: 6,
+    describeMe: function () {
+      console.log(`My name is ${this.name}, I am ${this.age} years old!`);
     },
-    getFormattedTitle: movie.getFormattedTitle,
   };
-  console.log(newMovie.getFormattedTitle()); // `this` === `newMovie` inside this method!
+  dog2.describeMe(); // `My name is Bob, I am 6 years old!`
 
-  // In STRICT MODE, functions that are NOT called from an object will have `this` remains === undefined
-  // In non-strict mode, `this` === global object in this case
-  let { getFormattedTitle } = movie;
-  // getFormattedTitle();  // !! Throws error as `getFormattedTitle` is called as a `let` value (not called from any objects), so `this` === undefined inside `getFormattedTitle`
+  // We can even reuse the method in ANOTHER object and `this` will refer to the new object!
+  // !!! This is called "unbound this", which is different from many other languages
+  //    - https://javascript.info/object-methods#this-is-not-bound
+  // The value of `this` is determined at RUNTIME, and will point to the OBJECT who CALLED it
+  // One way of remembering is that `this` refers to the "before-dot" object
+  const cat = {
+    name: "Lizzie",
+    age: 10,
+    // Just copying the whole method from `dog2` by reference
+    describeMe: dog2.describeMe,
+  };
+
+  // `this` inside `cat.describeMe` will correctly refer to `cat`
+  cat.describeMe(); // My name is Lizzie, I am 10 years old!
+
+  /**
+   * `this` can point to weird entities
+   */
+  // Sometimes, `this` in JavaScript may point to something weird
+  // First we need to understand what an EXECUTION CONTEXT is
+  //  - https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html#sec-execution-contexts
+  // The easist way of visualise it is to look at the "Call stack" (aka "execution context stack") in e.g. Chrome DevTools
+  // - When we run the global script, it creates the GLOBAL CONTEXT, which is seen as the "(anonymous)" context at the bottom of the call stack
+  // - When we have a new function called, it creates a new FUNCTION CONTEXT which is then pushed to the top of the stack
+  // - Any function called within that function will create another new function context and pushed on top of the parent context as well
+  // - The "Running execution context" means the TOP context in the stack
+
+  // `this` binds to different thing in different context
+  //  - the "thing" is loosely equal to "what object called the function"
+
+  /** The GLOBAL context **/
+  // `this` refers to the the GLOBAL OBJECT ("the global object called the global function")
+  // Consider the below, we call `this` directly in the global "anonymous function":
+  console.log(this); // Window
+
+  /** The FUNCTION context **/
+  // In a function context, `this` refers to the object who called it (as explained)
+  // !!! if we are in a NESTED function call, the JS engine will go all the way down the call stack ...
+  // ... until it finds a context that was called by an object (which binds to `this` of that context)
+  // - Details: https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html#sec-resolvethisbinding
+  //
+  // !!! `this` === undefined when we call a function stored in `const` or `let`
+  const describeMe = dog2.describeMe;
+  // `const` or `let` does NOT belong to the global object, it is a VARIABLE
+  // So calling describeMe() will === calling by no one and gives `this` === undefined:
+  try {
+    describeMe(); // <-- TypeError: Cannot read properties of undefined
+  } catch (err) {
+    console.error(err);
+  }
+  // !!! `this` === undefined in a function declaration in the global context (NOT from an object)
+  function callThis() {
+    console.log(`callThis: ${this}`);
+  }
+  callThis(); // undefined!!!
+  // For the above we are calling the `callThis` as a "variable", even though ...
+  // ... function declaration also doubly assigned it to the global object; the "function variable" takes precedance
+  // Therefore, it is NOT called from the global object and is called from NOTHING --> this === undefined!
+  //   - This is NOT the case if you use non-strict mode; in that case it will give you the global object @_@...
+  // !! But this will give you the global object again:
+  this.callThis(); // Window
 
   /**
    * Binding "this" manually
    */
-  // We can force what object "this" refers to in a function context even if it was not called from that object
+  // We can force what object "this" refers to in a function even if it was not called from that object
   // bind() will return a NEW function that has `this` bound to the specified object
   getFormattedTitle = getFormattedTitle.bind(movie); // now `this` inside the function refers to the original `movie` object
   console.log(getFormattedTitle()); // "STAR WARS"

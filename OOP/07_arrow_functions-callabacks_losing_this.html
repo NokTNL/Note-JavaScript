@@ -4,30 +4,32 @@
    * Arrow functions
    */
   // https://javascript.info/arrow-functions#arrow-functions-have-no-this
-  // Arrow functions DO NOT BIND 'this' for us; it does not create any execution context
-  //  - Think like it is "transparent"
+  // Arrow functions DO NOT BIND 'this' for us; think like it is "transparent"
   // That does not mean you can't use `this` inside an arrow function
-  // When 'this' is called inside an arrow function, 'this' will be taken from the CLOSEST ENCLOSING CONTEXT that has a `this`.
-  // e.g. if the function is enclosed by ANOTHER FUNCTION that has a `this` defined = A, then `this` === A
-  // e.g. if the function is not enclosed by any contexts, `this` === the global object (the closest enclosing context)!
-  // !!! bind, call & apply will have NO EFFECT on arrow functions
+  // When 'this' is called inside an arrow function, 'this' will be taken from the CLOSEST ENCLOSING CONTEXT that has a `this` binding
+  // e.g. if the function is enclosed by ANOTHER "normal" FUNCTION that has a `this` defined = A, then `this` === A
+  // e.g. if the function is not enclosed by any "normal" functions, `this` === the global object (bc. now only the global context has `this` defined)!
+  // !!! bind, call & apply have NO EFFECTS on arrow functions
   let obj = {
     sayThis: () => {
       console.log(this);
     },
   };
-  obj.sayThis(); // Window {}; `obj` is a plain object and is NOT a context!
+  obj.sayThis(); // Window {}; the call stack is: (global) --> sayThis
+  //                           `this`:             Window      undefined
 
   let user2 = {
     firstName: "Ilya",
     // We wrap the arrow function inside ANOTHER non-arrow function
     // sayHi has a `this` === user2
     sayHi() {
-      let arrow = () => alert(this.firstName);
+      let arrow = () => console.log(this.firstName);
       arrow();
     },
   };
-  user2.sayHi(); // `arrow` takes `this` from the enclosing context (sayHi) which has a `this`, so it will return user2.firstName === Ilya
+  user2.sayHi(); // Ilya
+  // Call stack: (global) --> sayHi  --> arrow
+  // `this`:      Window      user2      undefined
 
   /**
    * Browser binding "this" on callbacks & losing "this"
@@ -42,9 +44,9 @@
   };
   setTimeout(user.sayHi, 1000); // "Hello, undefined!" <-- we expected "Hello, John!" !!!
   // Reason: user.sayHi is NOT called by `user`. We passed the REFERENCE of the `sayHi` function to `setTimeout`
-  // We actually delegated the call to some other contexts in the browser code that will bind `this` = `window` by default
+  // We actually delegated the call to something else in the browser code that will eventually bind `this` = `window`
   //  - https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#the_this_problem
-  // The same will happen for event listeners, and it will set `this` = the event object
+  // The same will happen for event listeners, and it will bind `this` = the event object
   // Solution 1 : user a wrapper
   setTimeout(() => {
     user.sayHi(); // now sayHi is called by `user`!
