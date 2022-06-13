@@ -32,4 +32,13 @@
 
   // !! Don't call arrow functions with `new` because they don't bind 'this'!!!
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+
+  /**
+   * Constrcutors are everywhere in JS
+   */
+  // As simple as creating arrays and object literals, it actually calls the Array/Object constructors:
+  let a;
+  a = [];
+  // Is equivalent to:
+  a = new Array();
 </script>

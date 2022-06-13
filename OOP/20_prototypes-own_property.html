@@ -1,0 +1,106 @@
+<script>
+  // https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes
+
+  // Every object in JavaScript has a special property called "prototype", which points to ANOTHER object (or null)
+  // An object has access to all the extra properties provided by its prototype, apart from its own properties --> PROTOTYPAL INHERITANCE
+  // A prototype can also have ITS OWN prototype, so when I can't find a property in an object, ...
+  // ... JavaScript will try to find it in its prototype, and then its prototype's prototype, ...
+  // ... until it hits a prototype that has prototype === `null` --> PROTOTYPE CHAIN
+  // !!! The name of the an object's prototype property is NOT `prototype` but `__proto__` (<--by convention) and the preferred way to get it is using `Object.getPrototypeOf(object)`
+
+  /**
+   * Shadowing properties
+   */
+  // If an object's own property has the same name as its prototype's property, the own property will be used. This is called "shadowing property"
+
+  /**
+   * Setting up an object's prototype
+   */
+  /** 1. Using Object.create() **/
+  // First I define my custom prototype object
+  const dogPrototype = {
+    bark() {
+      console.log("Woof!");
+    },
+  };
+
+  // create a new object FROM the prototype object
+  const bobby = Object.create(dogPrototype);
+  // `bobby` DOES NOT have any own properties:
+  console.dir(bobby); // {} <-- empty object
+  // But you can still call `bark` from its prototype!
+  bobby.bark(); // "Woof!"
+
+  /** 2. Using constructors **/
+  // https://javascript.info/function-prototype
+  // All functions in JS has a `prototype` property (which, confusingly, is NOT its prototype but will be the prototype assigned to something else); also called "F.prototype"
+  // The default F.prototype is an object that has a single "constructor" property pointing to the function itself:
+  function Rabbit() {}
+  console.log(Rabbit.prototype); // { constructor: function Rabbit(){} }
+
+  // When a function is called as a constructor (using `new`), the object specified in the function's `prototype` property will be assigned as the new object's `__proto__`
+  const rabbit = new Rabbit();
+  console.dir(Object.getPrototypeOf(rabbit)); // <-- will get Rabbit.prototype which has the "constructor" pointing to the right constructor
+
+  // We can, of course, define our own prototype and assign it to a constructor funtion:
+  const Dog = function () {};
+  //    Dog.prototype = dogPrototype; <--- Assign to the constructor's prototype
+  // The problem of above is we WIPED OUT the `constructor` property by directly assigning to F.prototype, so need to add it back:
+  //    Dog.prototype.constructor = Dog;
+  // Alternative, we don't wipe out "prototype" of the constructor and instead add to it, e.g.:
+  Dog.prototype = { ...Dog.prototype, ...dogPrototype };
+
+  // Now if we instantiate a new object from the constructor:
+  const roy = new Dog();
+  // We can refer to the constructor of `roy` from its prototype:
+  roy.constructor === Dog; // true
+  // ^^^ We can do this without calling `roy.__proto__.constructor` because of JS search for properties in its prototype!
+
+  // !!! You now see actually "instance.constructor" is NOT always reliable for finding which constructor function was the object instantiated from, as we can assign it to whatever we want.
+  // More:
+  // - https://javascript.info/function-prototype#default-f-prototype-constructor-property
+  // - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor#changing_the_constructor_of_a_constructor_functions_prototype
+
+  // A more stringent check is to use `instanceof`, which checks if any prototype object inside the prototype chain === F.prototype for a specific constructor (although still not 100% sure as you can MANUALLY edit either object.__proto__ or Constructor.prototype later):
+  roy instanceof Dog; // true
+
+  // !!! RE-ASSIGNING the F.prototype of a constructor AFTER creating new instances from it has NO EFFECT on the new isntances, because instance.__proto__ is a reference pointing to the (old) prototype object in the memory, NOT to its constructor's F.prototype
+  // e.g. if I do this:
+  //    Dog.prototype = {}
+  // `roy` will still have the old object as the prototype, and it will make `roy instanceof Dog` false!!!
+  // !!! On the other hand, EDITING the F.prototype object will have effects on all instances because both F.prototype and the instances points to the same prototype object
+
+  /**
+   * Constructor inheriting from another constructor
+   */
+  // Now we want to create a prototype chain ourselves. The recommended way of doing this is to mix the two approaches above:
+  // https://www.theodinproject.com/lessons/node-path-javascript-objects-and-object-constructors#the-prototype
+  const ShibaInu = function () {
+    this.furColor = "khaki";
+  };
+  ShibaInu.prototype = Object.create(Dog.prototype);
+  // Now every ShibaInu we produce will have a prototype that in turn has the Dog's prototype! Prototype chain!
+  // !!! Don't do this:
+  //    ShibaInu.prototype = Dog.prototype;
+  // This is NOT doing chaining but assigning the same F.prototype to two different constructors.
+  // Changing ShibaInu.prototype (the children) will also change Dog.prototype (the parent), which is NOT what we want to do.
+
+  /**
+   * Checking if an object has a property
+   */
+  // 1. `in` operator
+  // `in` will check BOTH own properties AND those in the prototypal chain
+  const arr = [];
+  "toString" in arr; // true
+
+  // 2. Object.hasOwn(object, prop) <-- this is a *static* method of the Object constructor (i.e. does not exist in Object instances)
+  // This only check its OWN property and will not go into the prototype chain
+  const arr2 = [];
+  console.log(Object.hasOwn(arr2, "toString")); // false
+  arr2.ownProp = "Hi";
+  console.log(Object.hasOwn(arr2, "ownProp")); // true
+  // !!! You can also use object.prototype.hasOwnProperty() which IS in the prototype of instances, but MDN says you should prefer using Object.hasOwn if you can: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn#description
+  // hasOwnProperty() is older so it has a wider browser support
+
+  // !!!! Arrow functions don't have the "prototype" property (but they won't be use as constructor functions anyway becasue they don't have `this` binding)
+</script>
