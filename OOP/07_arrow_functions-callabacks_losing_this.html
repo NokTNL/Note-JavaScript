@@ -53,13 +53,15 @@
   }, 1000);
   // Solution 2. use bind()
   setTimeout(user.sayHi.bind(user), 1000);
-  // Solution 3: use arrow functions instantiated as methods inside ES6 class fields
-  //  - https://javascript.info/class#making-bound-methods-with-class-fields
-  // *** Why? vvvvv
-  // ES6 class fields are defined SEPARATELY for each object, and `this` is bound to the new object instantiated by the class (which is a FUNCTION)
+  // Solution 3: use arrow functions as methods inside a constructor function with `new`, or in classes (which use constructors under the hood)
+  // - https://javascript.info/class#making-bound-methods-with-class-fields
+  // - My own comment to that section: http://disq.us/p/2pd3efz
+  // In short, arrow functions remember `this` from the constrcutor's binidng because of its closure; that `this` never changes as arrow function do not bind `this`
   // !!! Downside: you have a copy of the arrow function in every instances of the class (instead of inherited in the prototype)
   //  - In general, it is discouraged to use arrow functions as methods
   //  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#arrow_functions_used_as_methods
+
+  //
 
   // Example:
   class Button {

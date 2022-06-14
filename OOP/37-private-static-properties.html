@@ -1,0 +1,58 @@
+<script>
+  /**
+   * Private properties/methods
+   */
+
+  // !!! These are fake. You can still access the properties/methods with the '_underscore' names.
+  class CoffeeMachine {
+    _waterAmount = 0;
+    constructor(power) {
+      this._power = power;
+    }
+    set waterAmount(value) {
+      if (value < 0) {
+        value = 0;
+      }
+      this._waterAmount = value;
+    }
+    get waterAmount() {
+      return this._waterAmount;
+    }
+    get power() {
+      return this._power;
+    }
+  } // Or use function names like setWaterAmount() as setters/getters
+  // True protected properties can only be defined as a VARIABLE in the constructors (bc. it's function scoped),
+  // and define getter/setter inside it: https://stackoverflow.com/questions/22156326/private-properties-in-javascript-es6-classes?page=1&tab=votes#tab-top
+  class Person {
+    constructor(name) {
+      let _name = name; // This variable is not accessible by name outside the constructor
+      this.setName = function (name) {
+        _name = name;
+      }; // Only accessible through this relationship in the memory
+      this.getName = function () {
+        return _name;
+      };
+    }
+  }
+
+  /**
+   * Static properties/methods
+   */
+  // properties and methods declared with 'static' will only be accessible in the class, but not the instances
+  class Static {
+    static staticField = "staticField property";
+    static staticMethod() {
+      console.log(
+        `You can only call Static.method and ${this.staticField} in the class`
+      );
+    }
+  }
+  Static.staticMethod();
+  const myStatic = new Static();
+  // myStatic.staticMethod(); // TypeError: static.staticMethod is not a function
+  // Static methods are inherited from the parent class too,
+  // EXCEPT BETWEEN built-in classes. e.g. Array inherits Object but does not have the Array.keys() static method
+  // !! class is a function (therefore is an object) so it can own properties and methods.
+  // Static methods are owned by the class object, not the prototype
+</script>

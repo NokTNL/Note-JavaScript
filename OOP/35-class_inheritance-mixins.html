@@ -1,0 +1,139 @@
+<script>
+  // https://javascript.info/class-inheritance
+
+  // INHERITANCE in OOP allows one class to add more functionalities to a base class, so the instances of the new class have all the functionalities of the base class plus some special functionalities of is own
+  // This is done with `extends` in JavaScript
+  // !!! JS does NOT support inhertitance from MULTIPLE classes, as it uses prototypes under the hood and one object can only have one prototype.
+  // The BASE class
+  class Person {
+    name = "Human";
+    shout() {
+      console.log(`Hey I'm ${this.name}`);
+    }
+  }
+  // The DERIVED class
+  class Student extends Person {
+    year = 7; // A new field unique to Student
+    // Instances will have access to properties/methods from this class as well from the base class
+    // vvv A new method unique to Student
+    register() {
+      console.log(`A ${this.name} is registering into year ${this.year}`);
+      //               ^ from the base class
+    }
+  }
+
+  // How does the instance from the derived class look like?
+  const student = new Student();
+  console.dir(student);
+  /*
+    student {
+
+      // FIELDS
+      name: "Human",  <--- property from base class
+      year: 7,        <--- property from derived class --- The instance have fields from BOTH classes as OWN properties
+      
+      // METHODS
+      // `extends` assigns Base.prototype to Derived.prototype.__proto__ for prototype chaining
+      // (it also assigns Base to Derived.__proto__ for static properties inheritance, see later)
+      // So Student will have its own protype for storing `register`, then also have a __proto__ that makes `shout` available as well
+
+      __proto__ : Student.prototype {
+
+        register() {...}  <--- derived class method 
+
+        __proto__:  ------------------------------> Person.prototype {
+                                                        shout() {...} <--- base class method
+                                                    }
+      }
+    }
+  */
+
+  // !!! `extends` can also be used to derive from ANY FUNCTIONS that has a defined F.prototype property. That means you can extend from traditional constructors as well:
+  function OldStyleConstructor() {}
+  OldStyleConstructor.prototype = {
+    type: "oldStyle",
+  };
+  class NewStyle extends OldStyleConstructor {}
+  const newStyle = new NewStyle();
+  console.dir(newStyle); // newStyle.__proto__.__proto__ === OldStyleConstructor.prototype
+
+  /**
+   * Overriding the base class
+   */
+  class Product {
+    imageUrl;
+    title = "Default";
+    constructor(title, imageUrl) {
+      this.title = title;
+      this.imageUrl = imageUrl;
+    }
+    someMethod() {
+      console.log("this is someMethod in the class Product");
+    }
+  }
+
+  class LimitedProduct extends Product {
+    // METHODS
+    // You can declare it using the same name as the parent's one. Both will be declared but at different positions in the prototype chain, and this one will be defined in its own prototype so will be found first when called --> naturally overriding
+    someMethod() {
+      // In case you don't want to override the parent's method totally, you can call the parent's method in the child's override method using `super.method`
+      super.someMethod(); // parent's method is called first
+      console.log("but is overidden in the class LimitedProduct");
+    }
+    // !!! arrow functions don't have "super" as well and is taken from the outer function that has a `super`
+
+    /**
+     * CONSTRUCTORS
+     */
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor
+    // If an extended class do not have constructor defined, by default this will be injected:
+    //  constructor(...args) {
+    //    super(...args);
+    //  } --> A constructor will always be availble, and instantiating from this class will need EXACTLY THE SAME ARGUMENTS as its parent's
+    // If we do define our own constructor, we MUST also call parent's constructor first using 'super()', and BEFORE using `this` in the remaining of the constructor
+    // - 1. it is natural that we must get the constructor of the parent run to use the parent's properties properly
+    // - 2. constructor() in a derived class DOES NOT CREATE THE `THIS` OBJECT when run with `new`. Only a non-derived class can create it.
+    constructor(title, imageUrl, quantity) {
+      super(title, imageUrl); // Pass title & imageUrl to super(). These are needed for the parent's constructor.
+      // Now we have the `this` object:
+      this.quantity = quantity;
+    }
+
+    // FIELDS
+    // You can override fields in the children as well (but is it a good design?)
+    // The weird thing of JS is, for overriden fields/methods, constructor in the parent class will refer to the PARENT'S NON-OVERRIDEN field, but will refer to the CHILDREN'S OVERRIDING METHOD: https://javascript.info/class-inheritance#overriding-class-fields-a-tricky-note
+    // This is because the children's overriding fields are only initialised AFTER super() is run
+    // This behaviour is DIFFERENT from most other languages
+    // Personally I think overriding parent's fields is an anti-pattern. Just assign a new value to the parent's field in the children's constructor, for example.
+  }
+
+  const limitedProduct = new LimitedProduct("Limited Product", "", 2);
+  limitedProduct.someMethod();
+  console.log(limitedProduct);
+
+  /**
+   * Mixins
+   */
+  // Sometimes we want a class to borrow methods/properties from more than one class.
+  // But in JS, a class cannot have more than one parent class.
+  // Mixin = make a class acquire extra methods/properties without inheriting
+  // Takes an OBJECT form:
+  const myMixin = {
+    sayHi() {
+      alert(`Hello ${this.name}`);
+    },
+    sayBye() {
+      alert(`Bye ${this.name}`);
+    },
+  };
+  class MixedInClass {
+    whatever = "";
+  }
+  Object.assign(MixedInClass.prototype, myMixin); // = adding new prop/methods to the class
+  // Object.assign():                   ^ copies all prop-value in this object
+  //                  ^ then add to this object (overwrites the value if the prop already exists)
+  //
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+
+  // Alterantively, do chained inheritance: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#mix-ins
+</script>

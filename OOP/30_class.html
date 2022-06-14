@@ -1,0 +1,71 @@
+<script>
+  // https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
+  // https://javascript.info/class
+  //
+  // The `class` syntax makes OOP inside JS easier. Under the hood, it stills uses the constructor function mechanisms and prototype assignment mentioned in prev. notes.
+  //
+  // A `class` defines the template of objects
+  // Use UpperCamelCase for classes
+  class Product {
+    /**
+     * Fields
+     */
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields#public_instance_fields
+    // class fields will become the object instance's OWN properties
+    //
+    imageUrl; // this will become `this.imageUrl` in the object instance
+    // (Optional) assign an initial value to the property
+    title = "Default"; // !!! Use assignment (=) and semicolon (;), NOT `title: "Default",` !!
+    // These will be overridden by assignment in `constructor()`; it is optional to state properties assigned in `constructor()` here but is good to state here for clarity
+
+    /**
+     * Methods
+     */
+    // !! This will be declared in the PROTOTYPE of the new instances.
+    // This is different from declaring a function in the `constructor()`, see below
+    // !! methods defined in a class like this will be NON-ENUMERABLE; they will NOT be iterated in `for ... in`
+    someMethod() {
+      console.log("this is someMethod in the class Product");
+    } // !! no COMMAS between methods
+
+    /**
+     * `constructor()`
+     */
+    // `constructor()` is called when a new object is constructed. Behaves exactly like classical JS constructor functions in terms of `this` binding
+    // It is OPTIONAL if you don't need to instantiate an object with a specific set of parameters
+    // All the properties (assigned as own props) & methods (passed from F.prototype) above will already have been defined so you can refer to them in the constructor correctly
+    constructor(title, imageUrl) {
+      this.title = title;
+      this.imageUrl = imageUrl;
+      // You can declare methods here as well like below, but is NOT advised because you will make identical copies of it.
+      this.duplicatedmethod = function () {};
+    }
+  }
+
+  // Create new objects with 'new'
+  // This will call the `constructor()` inside the class
+  // !!! Using `class` without `new` will throw error; this solves the common mistake of calling constrcutors without `new` prior to when `class` syntax was introduced
+  const product = new Product(
+    "A Pillow",
+    "https://www.maxpixel.net/static/photo/2x/Soft-Pillow-Green-Decoration-Deco-Snuggle-1241878.jpg"
+  );
+
+  // Class expression (similar to function expression): alternative way to declare class
+  const AnotherClass = class {
+    whatever = "";
+  };
+
+  /**
+   * Under the hood
+   */
+  // https://javascript.info/class#what-is-a-class
+  // `class` is a special type of function that returns a constructor function on declaration
+  // The returned constuctor function has exactly the same name as the class (e.g. `ClassName`), and it copies the code from the class's `constructor()`
+  // it also stores all methods defined in the class in the returned constructor (e.g. `ClassName.prototype`)
+  //
+  // At instantiation:
+  // 1. The fields are assign to the new `this`
+  // 2. The prototype is assigned to `this`
+  // 3. The constructor() code is run
+</script>

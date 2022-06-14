@@ -79,7 +79,17 @@
     this.furColor = "khaki";
   };
   ShibaInu.prototype = Object.create(Dog.prototype);
-  // Now every ShibaInu we produce will have a prototype that in turn has the Dog's prototype! Prototype chain!
+  // Now ShibaInu.prototype.__proto__ === Dog.prototype, and ShibaInu.prototype will be assigned to every instance
+  // So for every ShibaInu's instance:
+  //
+  /* shibaInu: {                  Dog: {
+                                      prototype: {
+      __proto__: ----this object--------> ....
+                                        __proto__: ---------.    Object.prototype: { ... }
+                                      }                     L________________________^
+    }                             }
+  */
+  // We have the prototypes chained!
   // !!! Don't do this:
   //    ShibaInu.prototype = Dog.prototype;
   // This is NOT doing chaining but assigning the same F.prototype to two different constructors.
