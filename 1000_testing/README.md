@@ -21,3 +21,4 @@ To install Jest: `npm i --save-dev jest`
 # Writing E2E tests with puppeteer
 
 - Puppeteer is a "headless" version of Chrome
+- Alternative: Cypress
