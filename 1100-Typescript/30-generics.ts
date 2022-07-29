@@ -17,9 +17,15 @@ const myString2: string = identity2(300); // <-- accidentally input a number to 
 myString2.split(" "); // <-- `split` is a method for Strings only, but TS thinks it is of type `any` so won't check it at all! This will only throw error at runtime
 
 // One way of working around this is to use GENERICS, which is a `wildcard` for types:
-//                 v This is the GENERIC type that we can use throughout the function; syntax: `<generic>`
+//                 v This is the GENERIC type that we can use throughout the function;
+//                 v Put the generic before the parameters, syntax: `<generic>(params)`
 //                 v `T` stands for type; typically `T` is used but you can name it whatever you want
-function identity3<T>(value: T) {
+function identity3 <T>(value: T) {
+  return value;
+}
+
+// To do that in arrow functions:
+const arrowFuncWithGenerics = <T>(value: T) => {
   return value;
 }
 
