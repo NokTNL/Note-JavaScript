@@ -1,7 +1,7 @@
 /**
  * Object Type & Type aliases
  */
-// You can defined the SHAPE of an object using an OBJECT TYPE (like an "object literal" but for defining types)
+// You can define the SHAPE of an object using an OBJECT TYPE (like an "object literal" but for defining types)
 //        v `:` here for type declaration, not `=` !!
 let person: {
   name: string; // <-- `;` here, not `,`!
@@ -24,6 +24,15 @@ const person2 = {
 };
 // !! Since a type is defined for `person2` already, you CAN'T add new properties like you do for JS!
 person2.newString = "Not allowed";
+
+// You can make certain properties OPTIONAL using `?:`
+type optionalable = {
+  name: string;
+  extra?: {
+    color?: string;
+    dateOfCreation: number;
+  }
+}
 
 // TYPE ALIASES allows you to define & reuse the same object type (or ANY TS types in general!)
 // syntax: `type <alias> = <type>`
@@ -69,3 +78,26 @@ function add2(a: number, b: number): string {
   return (a + b).toString();
 }
 // A funciton that DOES NOT return has the `void` type
+
+/**
+ * Object types in parameters
+ */
+// You can define a type for the parameter:
+type sayMsgData = {
+  message: string;
+  id: number;
+}
+function sayMsg(data: sayMsgData) {
+  return data.message;
+}
+// You can do object type definition inline as well, but may not be the cleanest way to do so:
+function sayMsg2(data: {
+  message: string;
+  id: number;
+}) {
+  return data.message;
+}
+// You can even destructuring:
+function sayMsg3({ message }: sayMsgData) {
+  return message;
+}
