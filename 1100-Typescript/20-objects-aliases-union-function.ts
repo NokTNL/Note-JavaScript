@@ -31,8 +31,8 @@ type optionalable = {
   extra?: {
     color?: string;
     dateOfCreation: number;
-  }
-}
+  };
+};
 
 // TYPE ALIASES allows you to define & reuse the same object type (or ANY TS types in general!)
 // syntax: `type <alias> = <type>`
@@ -67,17 +67,42 @@ let primitive: Primitive = "Hi";
 /**
  * Function: parameter & return types
  */
-// You can define types for a function's parameters
-// For the RETURN type, TS can infer it for us so usually no need explicit declaration
+// - You can define types for a function's parameters
+// - For the RETURN type, TS can infer it for us so usually no need explicit declaration
 function add(a: number, b: number) {
   //         ^------------------^ We have defined the types of parameters
   return a + b; // So the return type can be inferred ("number")
 }
-// If you want to explicitly state the return type (usually unnecessary):
+// A funciton that DOES NOT return anything has the `void` return type
+
+// If you want to explicitly state the return type (usually unnecessary & make things bloated), use RETURN TYPE ANNOTATION with ": <type>"
+// For function DECLARATION:
 function add2(a: number, b: number): string {
   return (a + b).toString();
 }
-// A funciton that DOES NOT return has the `void` type
+// For function EXPRESSION:
+const giveString = function (): string {
+  return "Hi";
+};
+const giveString2 = (): string => {
+  return "Hi";
+};
+/**
+ * Function type
+ */
+// https://www.typescriptlang.org/docs/handbook/2/functions.html#function-type-expressions
+// The "Function type" in TS looks like arrow function declarations
+// - !!! Note that the name of all parameters must be provided
+// - !!! It seems that you can't assign function types to function declaration
+type FuncType = (str: string) => void;
+let myFuncWithType: FuncType;
+// In JS, functions are objects that can have extra properties. Function type expressions do not allow declaring extra properties.
+// You need to define such functions like an object, with a CALL SIGNATURE that signifies it is "callable":
+type FuncWithProps = {
+  description: string;
+  // v call signature. Note that it looks like function declaration with return type annotation
+  (a: number, b: number): number;
+};
 
 /**
  * Object types in parameters
@@ -86,15 +111,12 @@ function add2(a: number, b: number): string {
 type sayMsgData = {
   message: string;
   id: number;
-}
+};
 function sayMsg(data: sayMsgData) {
   return data.message;
 }
 // You can do object type definition inline as well, but may not be the cleanest way to do so:
-function sayMsg2(data: {
-  message: string;
-  id: number;
-}) {
+function sayMsg2(data: { message: string; id: number }) {
   return data.message;
 }
 // You can even destructuring:

@@ -1,8 +1,8 @@
 /**
- * Generics in functions
+ * Generic functions (Generics)
  */
 // https://www.typescriptlang.org/docs/handbook/2/functions.html#generic-functions
-// Generics can be used to make a function reusable for different types of input but still preserves the type information
+// Generics are functions that are reusable for different TYPES
 // E.g.
 function identity(value: number) {
   return value;
@@ -17,32 +17,53 @@ function identity2(value: any) {
 const myString2: string = identity2(300); // <-- accidentally input a number to it but expected string
 myString2.split(" "); // <-- `split` is a method for Strings only, but TS thinks it is of type `any` so won't check it at all! This will only throw error at runtime
 
-// One way of working around this is to use GENERICS, which is a `wildcard` for types:
-//                 v This is the GENERIC type that we can use throughout the function;
-//                 v Put the generic before the parameters, syntax: `<generic>(params)`
+// One way of working around this is to use TYPE VARIABLES, which is a `wildcard` for types:
+//                 v You can use the type variable throughout the function;
+//                 v Put it before the parameters, syntax: `<generic>(params)`
 //                 v `T` stands for type; typically `T` is used but you can name it whatever you want
 function identity3<T>(value: T) {
   return value;
 }
 
 // To do that in arrow functions:
-const arrowFuncWithGenerics = <T>(value: T) => {
+const arrowFuncGeneric = <T>(value: T) => {
   return value;
-}
+};
 
-const myString3 = identity3(300); // Now TS can infer T is the NUMBER type
+// Note that TS can usually INFER <T> <--FROM-- ARGUMENTS in actual function call:
+const myString3 = identity3(300); // TS can infer that T is the NUMBER type
 myString3.split(" "); // This gives TS error as `split` is not a method for a number
 
-/**
- * Explicitly state types in generic functions
- */
-// Usually TS can infer the type from the parameters, but it does not always work
-function combine<Type>(arr1: Type[], arr2: Type[]){
-  return arr1.concat(arr2);
+// Example of MULTIPLE type inference:
+function map<Input, Output>(arr: Input[], func: (arg: Input) => Output) {
+  return arr.map(func);
 }
+const parsed = map(["1", "2", "3"], (n) => parseInt(n));
+//                                         ^ <Ouput> inferred as number
+//                     /-------------^ <Input> inferred already, so = string as well
+//                 ^ <Input> = string
+//
 
+/**
+ * Explicitlt defining <Type> at execution
+ */
+// Type inference for generics do not always work as expected
+const combine = <Type>(arr1: Type[], arr2: Type[]) => {
+  return arr1.concat(arr2);
+};
 // Now we try to combine a string[] and number[] (the inferred T should be `string | number`), but it does not work:
-const arr = combine([1, 2, 3], ["hello", "bye"]); // TS got the inference from the first parameter (number[]) so cannot accept string[]
+const arr = combine([1, 2, 3], ["hello", "bye"]); // TS got the inference from the FIRST parameter (number[]) so cannot accept string[]
 // Just explicitly state the union type with the syntax `combine<T>` (at EXECUTION, not at declaration!):
 const arr2 = combine<string | number>([1, 2, 3], ["hello", "bye"]); // TS got the inference from the first parameter
 // the return type will be `(string | number)[]`
+
+/**
+ * Generic function types
+ */
+// A function type can be made generic as well. Declaration is similar to generic arrow functions.
+type GenericFunc = <T>(value: T) => T;
+let myGenericFunc: GenericFunc;
+// Interface version: (using call signature)
+interface GenericInterface {
+  <T>(value: T): T;
+}
