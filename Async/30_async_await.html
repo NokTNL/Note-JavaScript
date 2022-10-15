@@ -18,12 +18,13 @@
   }
   test().then(console.log); // "Done"
 
+  // !!! async functions NEVER THROWS and it always finishes execution immediately by returning a Promise. Instead, when the code inside throws, the returned Promise is REJECTED.
+
   // arrow functions are accepted:
   const myAsyncFunc = async () => {};
   // IIFE:
   (async () => {
-    let response = await fetch("/article/promise-chaining/user.json");
-    let user = await response.json();
+    return "Promise resolved";
   })();
 
   /* await */
